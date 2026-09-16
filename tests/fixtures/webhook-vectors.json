@@ -1,0 +1,8 @@
+{
+  "_comment": "Produced by Python exactly as the Dialgem service signs webhooks: json.dumps({'event': ..., **payload}, default=str) then hex HMAC-SHA256. Do not hand-edit; a hand-built body would test JS against JS.",
+  "secret": "whsec_test_4f1c",
+  "vectors": [
+    {"body": "{\"event\": \"call_ended\", \"call_id\": \"6f1d2b9e-0c55-4a3e-9d0b-2f7c1c9a1e11\", \"agent_id\": \"0b8f3c2a-7d44-4e19-8a61-5b2e9d7c3f00\", \"status\": \"completed\", \"duration_s\": 42.5}", "sig": "be60e2fca0fbb0a63198c5f2f67e7f9c1eb57b95bafc8ac0536d17250f1fe55b"},
+    {"body": "{\"event\": \"call_analyzed\", \"call_id\": \"c1\", \"agent_id\": \"a1\", \"analysis\": {\"variables\": {\"name\": \"Zo\\u00eb\"}, \"model\": \"m\", \"extracted_at\": \"2026-09-15T10:00:00\", \"user_sentiment\": \"Positive\", \"call_successful\": true, \"error\": null}}", "sig": "1d50906b9b9bb8e3736db977846266906b3c5346d11a0a66ad853c64ff6732b0"}
+  ]
+}

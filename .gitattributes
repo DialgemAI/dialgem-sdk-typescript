@@ -1,0 +1,5 @@
+* text=auto eol=lf
+
+# CI regenerates these and fails on any diff; a CRLF checkout would be a whole-file diff.
+src/generated/*.d.ts text eol=lf
+openapi/openapi.json text eol=lf

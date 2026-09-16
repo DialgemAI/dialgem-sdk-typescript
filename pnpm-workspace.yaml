@@ -1,0 +1,5 @@
+# Standalone package, not a workspace root: this file only carries pnpm 11's
+# install policy. pnpm refuses dependency build scripts unless listed here.
+allowBuilds:
+  # tsup's bundler; its install script selects the platform binary.
+  esbuild: true
