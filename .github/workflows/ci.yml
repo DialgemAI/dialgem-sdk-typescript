@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build + test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # Version comes from package.json's `packageManager` field.
+      - uses: pnpm/action-setup@v4
+
+      # pnpm 11 itself needs Node >= 22.13; the Node versions customers run are
+      # covered by the `runtime` job below, against the built output.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm smoke
+      # publint + are-the-types-wrong: the ESM/CJS/types resolution a customer's
+      # bundler or tsconfig will hit, which the suite above cannot see.
+      - run: pnpm lint:package
+
+      # Request types are generated from openapi/openapi.json. A snapshot refreshed
+      # with `pnpm sync:openapi` but not regenerated fails here instead of shipping
+      # stale types.
+      - name: Generated types are current
+        run: |
+          pnpm gen:types
+          git diff --exit-code -- src/generated
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 3
+
+  runtime:
+    name: runtime (node ${{ matrix.node }})
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        # `engines` says >=20. The build job already runs on 22.
+        node: ["20", "24"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      # No install: the package has no runtime dependencies, and the smoke script
+      # uses only node: builtins, so this is exactly what a customer's Node loads.
+      - run: node scripts/smoke.mjs

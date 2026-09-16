@@ -1,0 +1,85 @@
+name: Release
+
+# Publishes @dialgem/sdk to npm when a tag `v<version>` is pushed, e.g.
+#
+#   git tag v0.1.0 && git push origin v0.1.0
+#
+# One publish serves npm, pnpm, yarn and bun: they all install from the npm registry.
+#
+# Auth: npm trusted publishing (OIDC, no stored token), configured for
+# @dialgem/sdk on npmjs.com → Settings → Trusted Publisher → GitHub Actions
+# (repo DialgemAI/dialgem-sdk-typescript, workflow release.yml, environment npm).
+# An `NPM_TOKEN` secret is used instead if set. Provenance is attached, since this repo is public.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Configure required reviewers on this environment to gate every release.
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write # npm provenance / trusted publishing
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history, for the on-main check below.
+          fetch-depth: 0
+
+      # A tag can be pushed on any commit, including one never reviewed or merged.
+      - name: Tagged commit is on main
+        run: |
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "Tag $GITHUB_REF_NAME points at $GITHUB_SHA, which is not on main." >&2
+            exit 1
+          fi
+
+      - name: Tag matches package.json version
+        run: |
+          expected="v$(node -p "require('./package.json').version")"
+          if [ "$GITHUB_REF_NAME" != "$expected" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json ($expected)." >&2
+            exit 1
+          fi
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm smoke
+      - run: pnpm lint:package
+
+      # Same gate as CI: never publish request types older than the snapshot.
+      - name: Generated types are current
+        run: |
+          pnpm gen:types
+          git diff --exit-code -- src/generated
+
+      # npm (not pnpm) publishes: trusted publishing needs npm >= 11.5.
+      - name: Publish
+        run: |
+          npm install -g npm@11
+          # A version containing a hyphen (0.2.0-beta.1) goes to the `next` dist-tag
+          # so `npm install @dialgem/sdk` never picks up a prerelease.
+          tag=latest
+          case "$(node -p "require('./package.json').version")" in *-*) tag=next ;; esac
+          provenance=""
+          if [ "$REPO_PRIVATE" = "false" ]; then provenance="--provenance"; fi
+          npm publish $provenance --access public --tag "$tag"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          REPO_PRIVATE: ${{ github.event.repository.private }}

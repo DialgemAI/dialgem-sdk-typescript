@@ -1,0 +1,7006 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Dialgem API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/agents": {
+      "get": {
+        "summary": "List Agents",
+        "operationId": "list_agents_v1_agents_get",
+        "parameters": [
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response List Agents V1 Agents Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Agent",
+        "operationId": "create_agent_v1_agents_post",
+        "parameters": [
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Create Agent V1 Agents Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/{agent_id}": {
+      "get": {
+        "summary": "Get Agent",
+        "operationId": "get_agent_v1_agents__agent_id__get",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Agent V1 Agents  Agent Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Agent",
+        "operationId": "update_agent_v1_agents__agent_id__patch",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Update Agent V1 Agents  Agent Id  Patch"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Agent",
+        "operationId": "delete_agent_v1_agents__agent_id__delete",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Delete Agent V1 Agents  Agent Id  Delete"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/{agent_id}/functions": {
+      "get": {
+        "summary": "List Functions",
+        "operationId": "list_functions_v1_agents__agent_id__functions_get",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response List Functions V1 Agents  Agent Id  Functions Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Function",
+        "operationId": "create_function_v1_agents__agent_id__functions_post",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FunctionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Create Function V1 Agents  Agent Id  Functions Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/{agent_id}/functions/reorder": {
+      "post": {
+        "summary": "Reorder Functions",
+        "operationId": "reorder_functions_v1_agents__agent_id__functions_reorder_post",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FunctionReorder"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {},
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/{agent_id}/functions/{function_id}": {
+      "patch": {
+        "summary": "Update Function",
+        "operationId": "update_function_v1_agents__agent_id__functions__function_id__patch",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "function_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Function Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FunctionUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Update Function V1 Agents  Agent Id  Functions  Function Id  Patch"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Function",
+        "operationId": "delete_function_v1_agents__agent_id__functions__function_id__delete",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "function_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Function Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/{agent_id}/knowledge": {
+      "get": {
+        "summary": "List Documents",
+        "operationId": "list_documents_v1_agents__agent_id__knowledge_get",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response List Documents V1 Agents  Agent Id  Knowledge Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ingest Document",
+        "operationId": "ingest_document_v1_agents__agent_id__knowledge_post",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Ingest Document V1 Agents  Agent Id  Knowledge Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/{agent_id}/knowledge/{source_id}": {
+      "delete": {
+        "summary": "Delete Document",
+        "operationId": "delete_document_v1_agents__agent_id__knowledge__source_id__delete",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "source_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Source Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/{agent_id}/mcp-servers": {
+      "get": {
+        "summary": "List Servers",
+        "operationId": "list_servers_v1_agents__agent_id__mcp_servers_get",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response List Servers V1 Agents  Agent Id  Mcp Servers Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Server",
+        "operationId": "create_server_v1_agents__agent_id__mcp_servers_post",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MCPServerCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Create Server V1 Agents  Agent Id  Mcp Servers Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/{agent_id}/mcp-servers/{server_id}": {
+      "patch": {
+        "summary": "Update Server",
+        "operationId": "update_server_v1_agents__agent_id__mcp_servers__server_id__patch",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MCPServerUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Update Server V1 Agents  Agent Id  Mcp Servers  Server Id  Patch"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Server",
+        "operationId": "delete_server_v1_agents__agent_id__mcp_servers__server_id__delete",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/{agent_id}/mcp-servers/{server_id}/test": {
+      "post": {
+        "summary": "Test Server",
+        "operationId": "test_server_v1_agents__agent_id__mcp_servers__server_id__test_post",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "server_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Server Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Test Server V1 Agents  Agent Id  Mcp Servers  Server Id  Test Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calls": {
+      "get": {
+        "summary": "List Calls",
+        "operationId": "list_calls_v1_calls_get",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "date_from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Date From"
+            }
+          },
+          {
+            "name": "date_to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Date To"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 10,
+              "title": "Page Size"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response List Calls V1 Calls Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calls/{call_id}": {
+      "get": {
+        "summary": "Get Call",
+        "operationId": "get_call_v1_calls__call_id__get",
+        "parameters": [
+          {
+            "name": "call_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Call Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Call V1 Calls  Call Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calls/outbound": {
+      "post": {
+        "summary": "Create Outbound Call",
+        "operationId": "create_outbound_call_v1_calls_outbound_post",
+        "parameters": [
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OutboundCallRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Create Outbound Call V1 Calls Outbound Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calls/register": {
+      "post": {
+        "summary": "Register Call",
+        "operationId": "register_call_v1_calls_register_post",
+        "parameters": [
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterCallRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterCallResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/phone-numbers": {
+      "get": {
+        "summary": "List Phone Numbers",
+        "operationId": "list_phone_numbers_v1_phone_numbers_get",
+        "parameters": [
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {},
+                  "title": "Response List Phone Numbers V1 Phone Numbers Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Register Phone Number",
+        "operationId": "register_phone_number_v1_phone_numbers_post",
+        "parameters": [
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhoneNumberCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Register Phone Number V1 Phone Numbers Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/phone-numbers/{number_id}": {
+      "patch": {
+        "summary": "Update Phone Number",
+        "operationId": "update_phone_number_v1_phone_numbers__number_id__patch",
+        "parameters": [
+          {
+            "name": "number_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Number Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhoneNumberUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Update Phone Number V1 Phone Numbers  Number Id  Patch"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Release Phone Number",
+        "operationId": "release_phone_number_v1_phone_numbers__number_id__delete",
+        "parameters": [
+          {
+            "name": "number_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Number Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/phone-numbers/{number_id}/assign": {
+      "patch": {
+        "summary": "Assign Phone Number",
+        "operationId": "assign_phone_number_v1_phone_numbers__number_id__assign_patch",
+        "parameters": [
+          {
+            "name": "number_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Number Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhoneNumberAssign"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Assign Phone Number V1 Phone Numbers  Number Id  Assign Patch"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/voices": {
+      "get": {
+        "summary": "List Voices",
+        "operationId": "list_voices_v1_voices_get",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Provider"
+            }
+          },
+          {
+            "name": "gender",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Gender"
+            }
+          },
+          {
+            "name": "accent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Accent"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Language"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response List Voices V1 Voices Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/flow-templates": {
+      "get": {
+        "summary": "List Flow Templates",
+        "operationId": "list_flow_templates_v1_flow_templates_get",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response List Flow Templates V1 Flow Templates Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/flow-templates/{template_id}": {
+      "get": {
+        "summary": "Get Flow Template",
+        "operationId": "get_flow_template_v1_flow_templates__template_id__get",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Template Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Flow Template V1 Flow Templates  Template Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/prompt-templates": {
+      "get": {
+        "summary": "List Prompt Templates",
+        "operationId": "list_prompt_templates_v1_prompt_templates_get",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PromptTemplateSummary"
+                  },
+                  "title": "Response List Prompt Templates V1 Prompt Templates Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/prompt-templates/{template_id}": {
+      "get": {
+        "summary": "Get Prompt Template",
+        "operationId": "get_prompt_template_v1_prompt_templates__template_id__get",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Template Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromptTemplateDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AgentCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "agent_type": {
+            "type": "string",
+            "enum": [
+              "llm",
+              "multi_prompt",
+              "flow"
+            ],
+            "title": "Agent Type",
+            "default": "llm"
+          },
+          "system_prompt": {
+            "type": "string",
+            "title": "System Prompt",
+            "default": ""
+          },
+          "states": {
+            "items": {
+              "$ref": "#/components/schemas/PromptState"
+            },
+            "type": "array",
+            "title": "States"
+          },
+          "starting_state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Starting State"
+          },
+          "default_dynamic_variables": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Default Dynamic Variables"
+          },
+          "llm_provider": {
+            "type": "string",
+            "enum": [
+              "anthropic",
+              "openai"
+            ],
+            "title": "Llm Provider"
+          },
+          "llm_model": {
+            "type": "string",
+            "title": "Llm Model"
+          },
+          "tts_engine": {
+            "type": "string",
+            "title": "Tts Engine",
+            "default": "cartesia"
+          },
+          "voice_id": {
+            "type": "string",
+            "title": "Voice Id",
+            "default": ""
+          },
+          "first_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Message"
+          },
+          "temperature": {
+            "type": "number",
+            "title": "Temperature",
+            "default": 0.7
+          },
+          "max_tokens": {
+            "type": "integer",
+            "title": "Max Tokens",
+            "default": 150
+          },
+          "flow_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FlowConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "responsiveness": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Responsiveness",
+            "default": 1
+          },
+          "interruption_sensitivity": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Interruption Sensitivity",
+            "default": 1
+          },
+          "enable_backchannel": {
+            "type": "boolean",
+            "title": "Enable Backchannel",
+            "default": false
+          },
+          "backchannel_frequency": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Backchannel Frequency",
+            "default": 0.8
+          },
+          "reminder_trigger_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Reminder Trigger Ms",
+            "default": 10000
+          },
+          "reminder_message": {
+            "type": "string",
+            "title": "Reminder Message",
+            "default": ""
+          },
+          "ambient_sound": {
+            "type": "string",
+            "enum": [
+              "none",
+              "coffee-shop",
+              "call-center",
+              "convention-hall",
+              "summer-outdoor",
+              "mountain-outdoor",
+              "static-noise"
+            ],
+            "title": "Ambient Sound",
+            "default": "none"
+          },
+          "ambient_sound_volume": {
+            "type": "number",
+            "maximum": 2,
+            "minimum": 0,
+            "title": "Ambient Sound Volume",
+            "default": 1
+          },
+          "voice_speed": {
+            "type": "number",
+            "maximum": 2,
+            "minimum": 0.5,
+            "title": "Voice Speed",
+            "default": 1
+          },
+          "voice_temperature": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Voice Temperature",
+            "default": 0.5
+          },
+          "stt_model": {
+            "type": "string",
+            "enum": [
+              "whisper",
+              "conformer",
+              "deepgram"
+            ],
+            "title": "Stt Model"
+          },
+          "language": {
+            "type": "string",
+            "title": "Language",
+            "default": "en"
+          },
+          "enable_transcription_formatting": {
+            "type": "boolean",
+            "title": "Enable Transcription Formatting",
+            "default": false
+          },
+          "boosted_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Boosted Keywords"
+          },
+          "denoising_mode": {
+            "type": "string",
+            "enum": [
+              "off",
+              "noise-cancellation"
+            ],
+            "title": "Denoising Mode",
+            "default": "off"
+          },
+          "begin_message_delay_ms": {
+            "type": "integer",
+            "maximum": 5000,
+            "minimum": 0,
+            "title": "Begin Message Delay Ms",
+            "default": 0
+          },
+          "end_call_after_silence_ms": {
+            "type": "integer",
+            "maximum": 3600000,
+            "minimum": 10000,
+            "title": "End Call After Silence Ms",
+            "default": 600000
+          },
+          "max_call_duration_ms": {
+            "type": "integer",
+            "maximum": 7200000,
+            "minimum": 60000,
+            "title": "Max Call Duration Ms",
+            "default": 3600000
+          },
+          "ring_duration_ms": {
+            "type": "integer",
+            "maximum": 90000,
+            "minimum": 5000,
+            "title": "Ring Duration Ms",
+            "default": 30000
+          },
+          "voicemail_detection_enabled": {
+            "type": "boolean",
+            "title": "Voicemail Detection Enabled",
+            "default": false
+          },
+          "voicemail_action": {
+            "type": "string",
+            "enum": [
+              "hangup",
+              "leave_message"
+            ],
+            "title": "Voicemail Action",
+            "default": "hangup"
+          },
+          "voicemail_message": {
+            "type": "string",
+            "title": "Voicemail Message",
+            "default": ""
+          },
+          "post_call_analysis_data": {
+            "items": {
+              "$ref": "#/components/schemas/PostCallAnalysisVariable"
+            },
+            "type": "array",
+            "title": "Post Call Analysis Data"
+          },
+          "post_call_analysis_model": {
+            "type": "string",
+            "title": "Post Call Analysis Model",
+            "default": "claude-sonnet-4-6"
+          },
+          "fallback_llm_provider": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "anthropic",
+                  "openai"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fallback Llm Provider"
+          },
+          "fallback_llm_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fallback Llm Model"
+          },
+          "fallback_voice_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fallback Voice Id"
+          },
+          "pii_redaction_enabled": {
+            "type": "boolean",
+            "title": "Pii Redaction Enabled",
+            "default": false
+          },
+          "opt_out_call_recording": {
+            "type": "boolean",
+            "title": "Opt Out Call Recording",
+            "default": false
+          },
+          "opt_out_transcript_storage": {
+            "type": "boolean",
+            "title": "Opt Out Transcript Storage",
+            "default": false
+          },
+          "data_retention_days": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Retention Days"
+          },
+          "webhook_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Url"
+          },
+          "webhook_events": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "call_started",
+                "call_ended",
+                "call_analyzed"
+              ]
+            },
+            "type": "array",
+            "title": "Webhook Events"
+          },
+          "webhook_signing_secret": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Signing Secret"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "AgentCreate"
+      },
+      "AgentSwapNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "display_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "global_node_setting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GlobalNodeSetting"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "const": "agent_swap",
+            "title": "Type"
+          },
+          "agent_id": {
+            "type": "string",
+            "title": "Agent Id"
+          },
+          "edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Edge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "post_call_analysis_setting": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "both_agents",
+                  "only_destination_agent"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Post Call Analysis Setting"
+          },
+          "agent_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Version"
+          },
+          "keep_current_voice": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Keep Current Voice"
+          },
+          "keep_current_language": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Keep Current Language"
+          },
+          "webhook_setting": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "both_agents",
+                  "only_destination_agent",
+                  "only_source_agent"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Setting"
+          },
+          "speak_during_execution": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speak During Execution"
+          },
+          "instruction": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Instruction"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "agent_id"
+        ],
+        "title": "AgentSwapNode"
+      },
+      "AgentUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "agent_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "llm",
+                  "multi_prompt",
+                  "flow"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Type"
+          },
+          "system_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "System Prompt"
+          },
+          "states": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PromptState"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "States"
+          },
+          "starting_state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Starting State"
+          },
+          "default_dynamic_variables": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Default Dynamic Variables"
+          },
+          "llm_provider": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "anthropic",
+                  "openai"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Llm Provider"
+          },
+          "llm_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Llm Model"
+          },
+          "tts_engine": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tts Engine"
+          },
+          "voice_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voice Id"
+          },
+          "first_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Message"
+          },
+          "temperature": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature"
+          },
+          "max_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens"
+          },
+          "flow_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FlowConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "responsiveness": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1,
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Responsiveness"
+          },
+          "interruption_sensitivity": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1,
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Interruption Sensitivity"
+          },
+          "enable_backchannel": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enable Backchannel"
+          },
+          "backchannel_frequency": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1,
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Backchannel Frequency"
+          },
+          "reminder_trigger_ms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reminder Trigger Ms"
+          },
+          "reminder_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reminder Message"
+          },
+          "ambient_sound": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "coffee-shop",
+                  "call-center",
+                  "convention-hall",
+                  "summer-outdoor",
+                  "mountain-outdoor",
+                  "static-noise"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ambient Sound"
+          },
+          "ambient_sound_volume": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 2,
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ambient Sound Volume"
+          },
+          "voice_speed": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 2,
+                "minimum": 0.5
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voice Speed"
+          },
+          "voice_temperature": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1,
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voice Temperature"
+          },
+          "stt_model": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "whisper",
+                  "conformer",
+                  "deepgram"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stt Model"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "enable_transcription_formatting": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enable Transcription Formatting"
+          },
+          "boosted_keywords": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Boosted Keywords"
+          },
+          "denoising_mode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "off",
+                  "noise-cancellation"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Denoising Mode"
+          },
+          "begin_message_delay_ms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 5000,
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Begin Message Delay Ms"
+          },
+          "end_call_after_silence_ms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 3600000,
+                "minimum": 10000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Call After Silence Ms"
+          },
+          "max_call_duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 7200000,
+                "minimum": 60000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Call Duration Ms"
+          },
+          "ring_duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 90000,
+                "minimum": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ring Duration Ms"
+          },
+          "voicemail_detection_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voicemail Detection Enabled"
+          },
+          "voicemail_action": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "hangup",
+                  "leave_message"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voicemail Action"
+          },
+          "voicemail_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voicemail Message"
+          },
+          "post_call_analysis_data": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PostCallAnalysisVariable"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Post Call Analysis Data"
+          },
+          "post_call_analysis_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Post Call Analysis Model"
+          },
+          "fallback_llm_provider": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "anthropic",
+                  "openai"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fallback Llm Provider"
+          },
+          "fallback_llm_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fallback Llm Model"
+          },
+          "fallback_voice_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fallback Voice Id"
+          },
+          "pii_redaction_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pii Redaction Enabled"
+          },
+          "opt_out_call_recording": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Opt Out Call Recording"
+          },
+          "opt_out_transcript_storage": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Opt Out Transcript Storage"
+          },
+          "data_retention_days": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Retention Days"
+          },
+          "webhook_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Url"
+          },
+          "webhook_events": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "call_started",
+                    "call_ended",
+                    "call_analyzed"
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Events"
+          },
+          "webhook_signing_secret": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Signing Secret"
+          }
+        },
+        "type": "object",
+        "title": "AgentUpdate"
+      },
+      "AgentWeightIn": {
+        "properties": {
+          "agent_id": {
+            "type": "string",
+            "title": "Agent Id"
+          },
+          "agent_version": {
+            "type": "integer",
+            "title": "Agent Version",
+            "default": 0
+          },
+          "weight": {
+            "type": "integer",
+            "title": "Weight",
+            "default": 1
+          }
+        },
+        "type": "object",
+        "required": [
+          "agent_id"
+        ],
+        "title": "AgentWeightIn"
+      },
+      "AgenticTransferConfig": {
+        "properties": {
+          "transfer_agent": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TransferAgent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "transfer_timeout_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transfer Timeout Ms"
+          },
+          "action_on_timeout": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Action On Timeout"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "AgenticTransferConfig"
+      },
+      "BranchNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "display_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "global_node_setting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GlobalNodeSetting"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/Edge"
+            },
+            "type": "array",
+            "title": "Edges"
+          },
+          "else_edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Edge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "const": "branch",
+            "title": "Type"
+          },
+          "finetune_transition_examples": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finetune Transition Examples"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "BranchNode"
+      },
+      "ConversationNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "display_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "global_node_setting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GlobalNodeSetting"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/Edge"
+            },
+            "type": "array",
+            "title": "Edges"
+          },
+          "else_edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Edge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "const": "conversation",
+            "title": "Type"
+          },
+          "instruction": {
+            "$ref": "#/components/schemas/Instruction"
+          },
+          "always_edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Edge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "skip_response_edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Edge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "model_choice": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelChoice"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "interruption_sensitivity": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Interruption Sensitivity"
+          },
+          "responsiveness": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Responsiveness"
+          },
+          "voice_speed": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voice Speed"
+          },
+          "allow_dtmf_interruption": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Allow Dtmf Interruption"
+          },
+          "reminder_trigger_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reminder Trigger Ms"
+          },
+          "reminder_max_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reminder Max Count"
+          },
+          "knowledge_base_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Knowledge Base Ids"
+          },
+          "kb_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/KBConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "finetune_conversation_examples": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finetune Conversation Examples"
+          },
+          "finetune_transition_examples": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finetune Transition Examples"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "instruction"
+        ],
+        "title": "ConversationNode"
+      },
+      "DialgemExtensions": {
+        "properties": {
+          "uses_extensions": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uses Extensions"
+          },
+          "features": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Features"
+          },
+          "content_hash": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content Hash"
+          },
+          "equation_grammar_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Equation Grammar Version"
+          },
+          "not_runnable": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/NotRunnableEntry"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Not Runnable"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "DialgemExtensions"
+      },
+      "DisplayPosition": {
+        "properties": {
+          "x": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "X"
+          },
+          "y": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Y"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "DisplayPosition"
+      },
+      "DocumentCreate": {
+        "properties": {
+          "filename": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Filename"
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 500000,
+            "minLength": 1,
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "filename",
+          "content"
+        ],
+        "title": "DocumentCreate"
+      },
+      "Edge": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "destination_node_id": {
+            "type": "string",
+            "title": "Destination Node Id"
+          },
+          "transition_condition": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PromptCondition"
+              },
+              {
+                "$ref": "#/components/schemas/EquationCondition"
+              }
+            ],
+            "title": "Transition Condition"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "destination_node_id",
+          "transition_condition"
+        ],
+        "title": "Edge"
+      },
+      "EndNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "display_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "global_node_setting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GlobalNodeSetting"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "const": "end",
+            "title": "Type"
+          },
+          "speak_during_execution": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speak During Execution"
+          },
+          "instruction": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Instruction"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "EndNode"
+      },
+      "Equation": {
+        "properties": {
+          "left": {
+            "type": "string",
+            "title": "Left"
+          },
+          "operator": {
+            "type": "string",
+            "enum": [
+              "==",
+              "!=",
+              ">",
+              ">=",
+              "<",
+              "<=",
+              "contains",
+              "not_contains",
+              "exists",
+              "not_exist"
+            ],
+            "title": "Operator"
+          },
+          "right": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Right"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "left",
+          "operator"
+        ],
+        "title": "Equation"
+      },
+      "EquationCondition": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "equation",
+            "title": "Type"
+          },
+          "equations": {
+            "items": {
+              "$ref": "#/components/schemas/Equation"
+            },
+            "type": "array",
+            "title": "Equations"
+          },
+          "operator": {
+            "type": "string",
+            "enum": [
+              "&&",
+              "||"
+            ],
+            "title": "Operator"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "type",
+          "equations",
+          "operator"
+        ],
+        "title": "EquationCondition"
+      },
+      "ExtractDynamicVariablesNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "display_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "global_node_setting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GlobalNodeSetting"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/Edge"
+            },
+            "type": "array",
+            "title": "Edges"
+          },
+          "else_edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Edge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "const": "extract_dynamic_variables",
+            "title": "Type"
+          },
+          "variables": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Variables"
+          },
+          "enable_typing_sound": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enable Typing Sound"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "variables"
+        ],
+        "title": "ExtractDynamicVariablesNode"
+      },
+      "FlowConfig": {
+        "properties": {
+          "nodes": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ConversationNode"
+                },
+                {
+                  "$ref": "#/components/schemas/SubagentNode"
+                },
+                {
+                  "$ref": "#/components/schemas/FunctionNode"
+                },
+                {
+                  "$ref": "#/components/schemas/McpNode"
+                },
+                {
+                  "$ref": "#/components/schemas/BranchNode"
+                },
+                {
+                  "$ref": "#/components/schemas/ExtractDynamicVariablesNode"
+                },
+                {
+                  "$ref": "#/components/schemas/TransferCallNode"
+                },
+                {
+                  "$ref": "#/components/schemas/PressDigitNode"
+                },
+                {
+                  "$ref": "#/components/schemas/AgentSwapNode"
+                },
+                {
+                  "$ref": "#/components/schemas/SmsNode"
+                },
+                {
+                  "$ref": "#/components/schemas/EndNode"
+                },
+                {
+                  "$ref": "#/components/schemas/OpaqueNode"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Nodes"
+          },
+          "start_node_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Node Id"
+          },
+          "start_speaker": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "user",
+                  "agent"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Speaker"
+          },
+          "global_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Global Prompt"
+          },
+          "model_choice": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelChoice"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "model_temperature": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Temperature"
+          },
+          "tool_call_strict_mode": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tool Call Strict Mode"
+          },
+          "default_dynamic_variables": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Default Dynamic Variables"
+          },
+          "knowledge_base_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Knowledge Base Ids"
+          },
+          "kb_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/KBConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tools": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/FlowTool"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tools"
+          },
+          "mcps": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mcps"
+          },
+          "components": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Components"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "begin_after_user_silence_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Begin After User Silence Ms"
+          },
+          "begin_tag_display_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "flex_mode": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Flex Mode"
+          },
+          "is_transfer_llm": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Transfer Llm"
+          },
+          "conversation_flow_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conversation Flow Id"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          },
+          "last_modification_timestamp": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Modification Timestamp"
+          },
+          "is_published": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Published"
+          },
+          "dialgem_extensions": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DialgemExtensions"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "FlowConfig"
+      },
+      "FlowTool": {
+        "properties": {
+          "tool_id": {
+            "type": "string",
+            "title": "Tool Id"
+          },
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "method": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Method"
+          },
+          "parameters": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parameters"
+          },
+          "timeout_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout Ms"
+          },
+          "speak_during_execution": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speak During Execution"
+          },
+          "speak_after_execution": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speak After Execution"
+          },
+          "response_variables": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Variables"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "tool_id"
+        ],
+        "title": "FlowTool"
+      },
+      "FunctionCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[a-z_][a-z0-9_]*$",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500,
+            "title": "Description",
+            "default": ""
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Parameters"
+          },
+          "url": {
+            "type": "string",
+            "maxLength": 2048,
+            "title": "Url",
+            "default": ""
+          },
+          "method": {
+            "type": "string",
+            "pattern": "^(GET|POST|PUT|PATCH|DELETE)$",
+            "title": "Method",
+            "default": "POST"
+          },
+          "timeout_ms": {
+            "type": "integer",
+            "maximum": 300000,
+            "minimum": 100,
+            "title": "Timeout Ms",
+            "default": 10000
+          },
+          "headers": {
+            "items": {
+              "$ref": "#/components/schemas/KVPair"
+            },
+            "type": "array",
+            "title": "Headers"
+          },
+          "query_params": {
+            "items": {
+              "$ref": "#/components/schemas/KVPair"
+            },
+            "type": "array",
+            "title": "Query Params"
+          },
+          "speak_during_execution": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speak During Execution"
+          },
+          "speak_after_execution": {
+            "type": "boolean",
+            "title": "Speak After Execution",
+            "default": true
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "custom",
+              "end_call",
+              "transfer_call",
+              "press_digit",
+              "agent_swap",
+              "check_availability_cal",
+              "book_appointment_cal"
+            ],
+            "title": "Kind",
+            "default": "custom"
+          },
+          "config": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Config"
+          },
+          "response_variables": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Response Variables"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "FunctionCreate"
+      },
+      "FunctionDef": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "default": ""
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Parameters"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "default": ""
+          },
+          "method": {
+            "type": "string",
+            "title": "Method",
+            "default": "POST"
+          },
+          "timeout_ms": {
+            "type": "integer",
+            "title": "Timeout Ms",
+            "default": 10000
+          },
+          "headers": {
+            "items": {
+              "$ref": "#/components/schemas/KVPair"
+            },
+            "type": "array",
+            "title": "Headers"
+          },
+          "query_params": {
+            "items": {
+              "$ref": "#/components/schemas/KVPair"
+            },
+            "type": "array",
+            "title": "Query Params"
+          },
+          "speak_during_execution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speak During Execution"
+          },
+          "speak_after_execution": {
+            "type": "boolean",
+            "title": "Speak After Execution",
+            "default": true
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "custom",
+              "check_availability_cal",
+              "book_appointment_cal",
+              "end_call",
+              "transfer_call",
+              "press_digit",
+              "agent_swap"
+            ],
+            "title": "Kind",
+            "default": "custom"
+          },
+          "config": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Config"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "FunctionDef"
+      },
+      "FunctionNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "display_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "global_node_setting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GlobalNodeSetting"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/Edge"
+            },
+            "type": "array",
+            "title": "Edges"
+          },
+          "else_edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Edge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "const": "function",
+            "title": "Type"
+          },
+          "tool_id": {
+            "type": "string",
+            "title": "Tool Id"
+          },
+          "tool_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "local",
+                  "shared"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tool Type"
+          },
+          "wait_for_result": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wait For Result"
+          },
+          "speak_during_execution": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speak During Execution"
+          },
+          "instruction": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Instruction"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "enable_typing_sound": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enable Typing Sound"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "tool_id"
+        ],
+        "title": "FunctionNode"
+      },
+      "FunctionReorder": {
+        "properties": {
+          "order": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Order"
+          }
+        },
+        "type": "object",
+        "required": [
+          "order"
+        ],
+        "title": "FunctionReorder"
+      },
+      "FunctionUpdate": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "parameters": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parameters"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "method": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(GET|POST|PUT|PATCH|DELETE)$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Method"
+          },
+          "timeout_ms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 300000,
+                "minimum": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout Ms"
+          },
+          "headers": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/KVPair"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Headers"
+          },
+          "query_params": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/KVPair"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Query Params"
+          },
+          "speak_during_execution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speak During Execution"
+          },
+          "speak_after_execution": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speak After Execution"
+          },
+          "config": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Config"
+          },
+          "response_variables": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Variables"
+          }
+        },
+        "type": "object",
+        "title": "FunctionUpdate"
+      },
+      "GlobalNodeSetting": {
+        "properties": {
+          "condition": {
+            "type": "string",
+            "title": "Condition"
+          },
+          "cool_down": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cool Down"
+          },
+          "go_back_conditions": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/GoBackCondition"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Go Back Conditions"
+          },
+          "positive_finetune_examples": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Positive Finetune Examples"
+          },
+          "negative_finetune_examples": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Negative Finetune Examples"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "condition"
+        ],
+        "title": "GlobalNodeSetting"
+      },
+      "GoBackCondition": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "transition_condition": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PromptCondition"
+              },
+              {
+                "$ref": "#/components/schemas/EquationCondition"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transition Condition"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "GoBackCondition"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HandoffOption": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "HandoffOption"
+      },
+      "Instruction": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "prompt",
+              "static_text"
+            ],
+            "title": "Type"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "title": "Instruction"
+      },
+      "IvrOption": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "IvrOption"
+      },
+      "KBConfig": {
+        "properties": {
+          "top_k": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top K"
+          },
+          "filter_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filter Score"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "KBConfig"
+      },
+      "KVPair": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "value": {
+            "type": "string",
+            "title": "Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "value"
+        ],
+        "title": "KVPair"
+      },
+      "MCPServerCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 48,
+            "pattern": "^[a-z_][a-z0-9_]*$",
+            "title": "Name"
+          },
+          "url": {
+            "type": "string",
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Url"
+          },
+          "auth_token": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4096
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auth Token"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled",
+            "default": true
+          },
+          "timeout_ms": {
+            "type": "integer",
+            "maximum": 300000,
+            "minimum": 100,
+            "title": "Timeout Ms",
+            "default": 10000
+          },
+          "headers": {
+            "items": {
+              "$ref": "#/components/schemas/KVPair"
+            },
+            "type": "array",
+            "title": "Headers"
+          },
+          "query_params": {
+            "items": {
+              "$ref": "#/components/schemas/KVPair"
+            },
+            "type": "array",
+            "title": "Query Params"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "url"
+        ],
+        "title": "MCPServerCreate"
+      },
+      "MCPServerUpdate": {
+        "properties": {
+          "url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "auth_token": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4096
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auth Token"
+          },
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enabled"
+          },
+          "timeout_ms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 300000,
+                "minimum": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout Ms"
+          },
+          "headers": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/KVPair"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Headers"
+          },
+          "query_params": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/KVPair"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Query Params"
+          }
+        },
+        "type": "object",
+        "title": "MCPServerUpdate"
+      },
+      "McpNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "display_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "global_node_setting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GlobalNodeSetting"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/Edge"
+            },
+            "type": "array",
+            "title": "Edges"
+          },
+          "else_edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Edge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "const": "mcp",
+            "title": "Type"
+          },
+          "mcp_id": {
+            "type": "string",
+            "title": "Mcp Id"
+          },
+          "mcp_tool_name": {
+            "type": "string",
+            "title": "Mcp Tool Name"
+          },
+          "wait_for_result": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wait For Result"
+          },
+          "response_variables": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Variables"
+          },
+          "speak_during_execution": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speak During Execution"
+          },
+          "instruction": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Instruction"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "enable_typing_sound": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enable Typing Sound"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "mcp_id",
+          "mcp_tool_name"
+        ],
+        "title": "McpNode"
+      },
+      "ModelChoice": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "high_priority": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "High Priority"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "ModelChoice"
+      },
+      "NotRunnableEntry": {
+        "properties": {
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "node_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Node Ids"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "default": ""
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "reason"
+        ],
+        "title": "NotRunnableEntry"
+      },
+      "OpaqueNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "display_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "global_node_setting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GlobalNodeSetting"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "OpaqueNode"
+      },
+      "OutboundCallRequest": {
+        "properties": {
+          "to": {
+            "type": "string",
+            "minLength": 3,
+            "title": "To"
+          },
+          "from_": {
+            "type": "string",
+            "minLength": 3,
+            "title": "From"
+          },
+          "agent_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Id"
+          },
+          "dialgem_llm_dynamic_variables": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dialgem Llm Dynamic Variables"
+          }
+        },
+        "type": "object",
+        "required": [
+          "to",
+          "from_"
+        ],
+        "title": "OutboundCallRequest"
+      },
+      "PhoneNumberAssign": {
+        "properties": {
+          "agent_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Id"
+          }
+        },
+        "type": "object",
+        "title": "PhoneNumberAssign"
+      },
+      "PhoneNumberCreate": {
+        "properties": {
+          "phone_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone Number"
+          },
+          "number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number"
+          },
+          "nickname": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nickname"
+          },
+          "phone_number_type": {
+            "type": "string",
+            "title": "Phone Number Type",
+            "default": "custom"
+          },
+          "inbound_agent_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inbound Agent Id"
+          },
+          "outbound_agent_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outbound Agent Id"
+          },
+          "custom_sms_enabled": {
+            "type": "boolean",
+            "title": "Custom Sms Enabled",
+            "default": false
+          },
+          "flow_sms_sender_enabled": {
+            "type": "boolean",
+            "title": "Flow Sms Sender Enabled",
+            "default": false
+          },
+          "sip_outbound_trunk_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SipOutboundTrunkConfigIn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "provider": {
+            "type": "string",
+            "title": "Provider",
+            "default": "twilio"
+          },
+          "provider_sid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider Sid"
+          }
+        },
+        "type": "object",
+        "title": "PhoneNumberCreate"
+      },
+      "PhoneNumberUpdate": {
+        "properties": {
+          "nickname": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nickname"
+          },
+          "phone_number_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone Number Type"
+          },
+          "custom_sms_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Sms Enabled"
+          },
+          "flow_sms_sender_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Flow Sms Sender Enabled"
+          },
+          "inbound_agent_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inbound Agent Id"
+          },
+          "set_inbound_agent": {
+            "type": "boolean",
+            "title": "Set Inbound Agent",
+            "default": false
+          },
+          "outbound_agent_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outbound Agent Id"
+          },
+          "set_outbound_agent": {
+            "type": "boolean",
+            "title": "Set Outbound Agent",
+            "default": false
+          },
+          "inbound_agents": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/AgentWeightIn"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inbound Agents"
+          },
+          "outbound_agents": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/AgentWeightIn"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outbound Agents"
+          },
+          "sip_outbound_trunk_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SipOutboundTrunkConfigIn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "PhoneNumberUpdate"
+      },
+      "PostCallAnalysisVariable": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "string",
+              "number",
+              "boolean",
+              "enum"
+            ],
+            "title": "Type"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "default": ""
+          },
+          "choices": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Choices"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "type"
+        ],
+        "title": "PostCallAnalysisVariable"
+      },
+      "PressDigitNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "display_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "global_node_setting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GlobalNodeSetting"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/Edge"
+            },
+            "type": "array",
+            "title": "Edges"
+          },
+          "else_edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Edge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "const": "press_digit",
+            "title": "Type"
+          },
+          "instruction": {
+            "$ref": "#/components/schemas/Instruction"
+          },
+          "delay_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delay Ms"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "instruction"
+        ],
+        "title": "PressDigitNode"
+      },
+      "PromptCondition": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "prompt",
+            "title": "Type"
+          },
+          "prompt": {
+            "type": "string",
+            "title": "Prompt"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "type",
+          "prompt"
+        ],
+        "title": "PromptCondition"
+      },
+      "PromptState": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "state_prompt": {
+            "type": "string",
+            "title": "State Prompt",
+            "default": ""
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/StateEdge"
+            },
+            "type": "array",
+            "title": "Edges"
+          },
+          "tools": {
+            "items": {
+              "$ref": "#/components/schemas/FunctionDef"
+            },
+            "type": "array",
+            "title": "Tools"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "PromptState"
+      },
+      "PromptTemplateDetail": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "setup_note": {
+            "type": "string",
+            "title": "Setup Note"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "use_case": {
+            "type": "string",
+            "title": "Use Case"
+          },
+          "icon": {
+            "type": "string",
+            "title": "Icon"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "agent_type": {
+            "type": "string",
+            "title": "Agent Type",
+            "default": "llm"
+          },
+          "variable_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Variable Names"
+          },
+          "base": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base"
+          },
+          "system_prompt_chars": {
+            "type": "integer",
+            "title": "System Prompt Chars"
+          },
+          "system_prompt": {
+            "type": "string",
+            "title": "System Prompt"
+          },
+          "first_message": {
+            "type": "string",
+            "title": "First Message"
+          },
+          "default_dynamic_variables": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Default Dynamic Variables"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "setup_note",
+          "category",
+          "tags",
+          "use_case",
+          "icon",
+          "source",
+          "variable_names",
+          "system_prompt_chars",
+          "system_prompt",
+          "first_message"
+        ],
+        "title": "PromptTemplateDetail"
+      },
+      "PromptTemplateSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "setup_note": {
+            "type": "string",
+            "title": "Setup Note"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "use_case": {
+            "type": "string",
+            "title": "Use Case"
+          },
+          "icon": {
+            "type": "string",
+            "title": "Icon"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "agent_type": {
+            "type": "string",
+            "title": "Agent Type",
+            "default": "llm"
+          },
+          "variable_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Variable Names"
+          },
+          "base": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base"
+          },
+          "system_prompt_chars": {
+            "type": "integer",
+            "title": "System Prompt Chars"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "setup_note",
+          "category",
+          "tags",
+          "use_case",
+          "icon",
+          "source",
+          "variable_names",
+          "system_prompt_chars"
+        ],
+        "title": "PromptTemplateSummary"
+      },
+      "RegisterCallRequest": {
+        "properties": {
+          "agent_id": {
+            "type": "string",
+            "title": "Agent Id"
+          },
+          "from_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From Number"
+          },
+          "to_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "To Number"
+          },
+          "call_sid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Call Sid"
+          },
+          "direction": {
+            "type": "string",
+            "pattern": "^(inbound|outbound)$",
+            "title": "Direction",
+            "default": "inbound"
+          },
+          "dialgem_llm_dynamic_variables": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dialgem Llm Dynamic Variables"
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metadata"
+          }
+        },
+        "type": "object",
+        "required": [
+          "agent_id"
+        ],
+        "title": "RegisterCallRequest"
+      },
+      "RegisterCallResponse": {
+        "properties": {
+          "call_id": {
+            "type": "string",
+            "title": "Call Id"
+          },
+          "stream_url": {
+            "type": "string",
+            "title": "Stream Url"
+          },
+          "expires_in": {
+            "type": "integer",
+            "title": "Expires In"
+          }
+        },
+        "type": "object",
+        "required": [
+          "call_id",
+          "stream_url",
+          "expires_in"
+        ],
+        "title": "RegisterCallResponse"
+      },
+      "SipOutboundTrunkConfigIn": {
+        "properties": {
+          "termination_uri": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Termination Uri"
+          },
+          "transport": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transport"
+          },
+          "auth_username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auth Username"
+          },
+          "auth_password": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auth Password"
+          }
+        },
+        "type": "object",
+        "title": "SipOutboundTrunkConfigIn"
+      },
+      "SmsEdge": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "destination_node_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Destination Node Id"
+          },
+          "transition_condition": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PromptCondition"
+              },
+              {
+                "$ref": "#/components/schemas/EquationCondition"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transition Condition"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "SmsEdge"
+      },
+      "SmsInstruction": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "template": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Template"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "SmsInstruction"
+      },
+      "SmsNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "display_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "global_node_setting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GlobalNodeSetting"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "const": "sms",
+            "title": "Type"
+          },
+          "instruction": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SmsInstruction"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "success_edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SmsEdge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "failed_edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SmsEdge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "model_choice": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelChoice"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "SmsNode"
+      },
+      "StateEdge": {
+        "properties": {
+          "destination_state_name": {
+            "type": "string",
+            "title": "Destination State Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "default": ""
+          },
+          "parameters": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parameters"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "destination_state_name"
+        ],
+        "title": "StateEdge"
+      },
+      "SubagentNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "display_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "global_node_setting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GlobalNodeSetting"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/Edge"
+            },
+            "type": "array",
+            "title": "Edges"
+          },
+          "else_edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Edge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "const": "subagent",
+            "title": "Type"
+          },
+          "instruction": {
+            "$ref": "#/components/schemas/Instruction"
+          },
+          "always_edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Edge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "skip_response_edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Edge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tool_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tool Ids"
+          },
+          "tools": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tools"
+          },
+          "model_choice": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelChoice"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "knowledge_base_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Knowledge Base Ids"
+          },
+          "kb_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/KBConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "instruction"
+        ],
+        "title": "SubagentNode"
+      },
+      "TransferAgent": {
+        "properties": {
+          "agent_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Id"
+          },
+          "agent_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Version"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "TransferAgent"
+      },
+      "TransferCallNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "display_position": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "global_node_setting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GlobalNodeSetting"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "const": "transfer_call",
+            "title": "Type"
+          },
+          "transfer_destination": {
+            "$ref": "#/components/schemas/TransferDestination"
+          },
+          "transfer_option": {
+            "$ref": "#/components/schemas/TransferOption"
+          },
+          "edge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Edge"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "custom_sip_headers": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Sip Headers"
+          },
+          "ignore_e164_validation": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ignore E164 Validation"
+          },
+          "speak_during_execution": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speak During Execution"
+          },
+          "instruction": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Instruction"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "transfer_destination",
+          "transfer_option"
+        ],
+        "title": "TransferCallNode"
+      },
+      "TransferDestination": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "predefined",
+                  "inferred"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          },
+          "number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number"
+          },
+          "extension": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extension"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "TransferDestination"
+      },
+      "TransferOption": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "cold_transfer",
+                  "warm_transfer",
+                  "agentic_warm_transfer"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          },
+          "cold_transfer_mode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cold Transfer Mode"
+          },
+          "show_transferee_as_caller": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Show Transferee As Caller"
+          },
+          "transfer_ring_duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transfer Ring Duration Ms"
+          },
+          "agent_detection_timeout_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Detection Timeout Ms"
+          },
+          "opt_out_human_detection": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Opt Out Human Detection"
+          },
+          "on_hold_music": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "On Hold Music"
+          },
+          "custom_on_hold_music_asset_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom On Hold Music Asset Id"
+          },
+          "ivr_option": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/IvrOption"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "private_handoff_option": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HandoffOption"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "public_handoff_option": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HandoffOption"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "enable_bridge_audio_cue": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enable Bridge Audio Cue"
+          },
+          "agentic_transfer_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgenticTransferConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "TransferOption"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "name": "@dialgem/sdk",
+  "version": "0.1.0-beta.0",
+  "description": "Official TypeScript SDK for the Dialgem voice AI API: agents, calls, phone numbers and webhook verification from your backend.",
+  "keywords": [
+    "dialgem",
+    "voice-ai",
+    "voice-agent",
+    "telephony",
+    "twilio",
+    "sdk",
+    "typescript"
+  ],
+  "license": "Apache-2.0",
+  "author": "Dialgem",
+  "homepage": "https://github.com/DialgemAI/dialgem-sdk-typescript#readme",
+  "bugs": {
+    "url": "https://github.com/DialgemAI/dialgem-sdk-typescript/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DialgemAI/dialgem-sdk-typescript.git"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.cts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "examples",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:live": "vitest run --config vitest.live.config.ts",
+    "sync:openapi": "node scripts/sync-openapi.mjs",
+    "gen:types": "node scripts/generate-types.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "lint:package": "publint --strict && attw --pack .",
+    "prepublishOnly": "pnpm run build"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
+    "@types/express": "5.0.6",
+    "@types/node": "22.20.2",
+    "express": "5.2.1",
+    "fastify": "5.12.4",
+    "openapi-typescript": "7.13.0",
+    "publint": "0.3.24",
+    "tsup": "8.5.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  },
+  "packageManager": "pnpm@11.10.0"
+}
