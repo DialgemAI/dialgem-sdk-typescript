@@ -7,31 +7,28 @@ import { Dialgem } from "@dialgem/sdk"
 
 const dialgem = new Dialgem()
 
-// `started_at` is ISO 8601 UTC without a suffix, so it compares correctly as a string.
-const cutoff = new Date(Date.now() - 86_400_000).toISOString().slice(0, 19)
-const seen = new Set<string>()
+const since = Date.now() - 86_400_000
 
-// Calls come newest first, so stop at the first one older than the cutoff.
-for await (const call of dialgem.calls.list({ page_size: 50 })) {
-  if (call.started_at && call.started_at < cutoff) break
-  // Offset pages shift when a call starts mid-export; skip the repeat.
-  if (seen.has(call.id)) continue
-  seen.add(call.id)
-
+// Pages are cursor-based: iterating is stable while new calls keep arriving.
+for await (const call of dialgem.calls.list({ start_after: since, status: "completed", limit: 50 })) {
   const row = {
     id: call.id,
     agent: call.agent_name,
     direction: call.direction,
     from: call.from_number,
     to: call.to_number,
-    status: call.status,
-    started_at: call.started_at,
-    duration_s: call.duration_s,
+    started_at: call.start_timestamp,
+    duration_ms: call.duration_ms,
+    ended_because: call.disconnection_reason,
+    voicemail: call.in_voicemail,
     cost_usd: call.call_cost ? call.call_cost.combined_cost / 10_000 : null,
+    summary: call.analysis?.call_summary ?? null,
     successful: call.analysis?.call_successful ?? null,
     sentiment: call.analysis?.user_sentiment ?? null,
     variables: call.analysis?.variables ?? {},
-    transcript: call.transcript.map((t) => `${t.role}: ${t.text}`).join("\n"),
+    latency_p50_ms: call.latency?.e2e?.p50 ?? null,
+    metadata: call.metadata,
+    transcript: call.transcript_text,
   }
   process.stdout.write(`${JSON.stringify(row)}\n`)
 }

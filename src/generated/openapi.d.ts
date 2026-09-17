@@ -213,6 +213,25 @@ export interface paths {
         get: operations["get_call_v1_calls__call_id__get"];
         put?: never;
         post?: never;
+        /** Delete Call */
+        delete: operations["delete_call_v1_calls__call_id__delete"];
+        options?: never;
+        head?: never;
+        /** Patch Call */
+        patch: operations["patch_call_v1_calls__call_id__patch"];
+        trace?: never;
+    };
+    "/v1/calls/{call_id}/stop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Stop Call */
+        post: operations["stop_call_v1_calls__call_id__stop_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -773,6 +792,39 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
+        /** CallPatch */
+        CallPatch: {
+            /** Amd Result */
+            amd_result?: {
+                [key: string]: unknown;
+            } | null;
+            /** Call Sid */
+            call_sid?: string | null;
+            /** Disconnection Reason */
+            disconnection_reason?: string | null;
+            /** Duration S */
+            duration_s?: number | null;
+            /** Ended At */
+            ended_at?: string | null;
+            /** Events */
+            events?: unknown[] | null;
+            /** Meta */
+            meta?: {
+                [key: string]: unknown;
+            } | null;
+            /** Metadata */
+            metadata?: {
+                [key: string]: unknown;
+            } | null;
+            /** Origination State */
+            origination_state?: string | null;
+            /** Recording Key */
+            recording_key?: string | null;
+            /** Status */
+            status?: string | null;
+            /** Transcript */
+            transcript?: unknown[] | null;
+        };
         /** ConversationNode */
         ConversationNode: {
             /** Allow Dtmf Interruption */
@@ -1016,6 +1068,11 @@ export interface components {
         };
         /** FunctionCreate */
         FunctionCreate: {
+            /**
+             * Args At Root
+             * @default false
+             */
+            args_at_root?: boolean;
             /** Config */
             config?: {
                 [key: string]: unknown;
@@ -1070,6 +1127,11 @@ export interface components {
         };
         /** FunctionDef */
         FunctionDef: {
+            /**
+             * Args At Root
+             * @default false
+             */
+            args_at_root?: boolean;
             /** Config */
             config?: {
                 [key: string]: unknown;
@@ -1157,6 +1219,8 @@ export interface components {
         };
         /** FunctionUpdate */
         FunctionUpdate: {
+            /** Args At Root */
+            args_at_root?: boolean | null;
             /** Config */
             config?: {
                 [key: string]: unknown;
@@ -1383,6 +1447,10 @@ export interface components {
             } | null;
             /** From */
             from_: string;
+            /** Metadata */
+            metadata?: {
+                [key: string]: unknown;
+            } | null;
             /** To */
             to: string;
         };
@@ -2442,13 +2510,26 @@ export interface operations {
     list_calls_v1_calls_get: {
         parameters: {
             query?: {
+                agent_id?: string[] | null;
                 api_key?: string | null;
+                call_successful?: boolean | null;
+                call_type?: string | null;
                 date_from?: string | null;
                 date_to?: string | null;
+                direction?: string | null;
+                disconnection_reason?: string[] | null;
+                from_number?: string | null;
+                limit?: number | null;
                 page?: number;
                 page_size?: number;
+                pagination_key?: string | null;
                 search?: string | null;
-                status?: string | null;
+                sort_order?: string;
+                start_after?: number | null;
+                start_before?: number | null;
+                status?: string[] | null;
+                to_number?: string | null;
+                user_sentiment?: string | null;
             };
             header?: never;
             path?: never;
@@ -2490,6 +2571,109 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_call_v1_calls__call_id__delete: {
+        parameters: {
+            query?: {
+                api_key?: string | null;
+            };
+            header?: never;
+            path: {
+                call_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_call_v1_calls__call_id__patch: {
+        parameters: {
+            query?: {
+                api_key?: string | null;
+            };
+            header?: never;
+            path: {
+                call_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallPatch"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    stop_call_v1_calls__call_id__stop_post: {
+        parameters: {
+            query?: {
+                api_key?: string | null;
+            };
+            header?: never;
+            path: {
+                call_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            202: {
                 headers: {
                     [name: string]: unknown;
                 };

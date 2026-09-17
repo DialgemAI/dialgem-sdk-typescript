@@ -1,10 +1,15 @@
 import { DialgemError, WebhookVerificationError } from "./core/errors.js"
-import type { WebhookEvent } from "./types/webhook.js"
+import type { FunctionCallRequest, WebhookEvent } from "./types/webhook.js"
 
-/** Header carrying the hex HMAC-SHA256 of the raw request body. */
+/** Header carrying the request signature: `v=<timestamp_ms>,d=<hex>`. */
 export const WEBHOOK_SIGNATURE_HEADER = "x-dialgem-signature"
 /** Header naming the event; the same value as the body's `event`. */
 export const WEBHOOK_EVENT_HEADER = "x-dialgem-event"
+/** Header with an id that stays the same across retries of one delivery. */
+export const WEBHOOK_DELIVERY_HEADER = "x-dialgem-delivery"
+
+/** Signatures older or newer than this are rejected, so a captured request cannot be replayed. */
+export const DEFAULT_SIGNATURE_TOLERANCE_MS = 5 * 60 * 1000
 
 /** The raw request body, byte-for-byte as received. Node `Buffer` is a `Uint8Array`. */
 export type WebhookPayload = string | Uint8Array | ArrayBuffer
@@ -12,11 +17,25 @@ export type WebhookPayload = string | Uint8Array | ArrayBuffer
 /** A header value as Node's `IncomingHttpHeaders`, `Headers.get()` or a framework hands it over. */
 export type SignatureHeader = string | string[] | null | undefined
 
+export interface VerifyOptions {
+  /** Maximum age (and clock skew) of a signature, in ms. Default 5 minutes. */
+  toleranceMs?: number | undefined
+  /** The current time in epoch ms. For tests; defaults to `Date.now()`. */
+  now?: number | undefined
+}
+
 const encoder = new TextEncoder()
 const decoder = new TextDecoder()
+const SIGNATURE_RE = /^v=(\d{10,16}),d=([0-9a-f]{64})$/
 
 /**
- * Verifies and parses Dialgem webhooks.
+ * Verifies and parses what Dialgem sends to your servers: event webhooks, and
+ * requests to your custom functions. Both use one signature scheme:
+ *
+ *   x-dialgem-signature: v=<timestamp_ms>,d=<hex>
+ *   hex = HMAC-SHA256(secret, raw_body + timestamp_ms)
+ *
+ * The secret is the agent's `webhook_signing_secret`.
  *
  * **Pass the raw body.** The signature covers the exact bytes Dialgem sent. A body
  * that was parsed and re-serialized (`express.json()`, `JSON.stringify(req.body)`)
@@ -25,49 +44,100 @@ const decoder = new TextDecoder()
  */
 export class Webhooks {
   /**
-   * Returns whether `signature` is the HMAC-SHA256 of `payload` under `secret`.
-   * Constant-time. Returns `false` for a missing or malformed signature; throws only
-   * if `secret` is empty, which is a configuration error rather than a bad request.
+   * Returns whether `signature` is a current, valid signature of `payload` under
+   * `secret`. Constant-time. Returns `false` for a missing, malformed, tampered or
+   * stale signature; throws only if `secret` is empty, which is a configuration
+   * error rather than a bad request.
    */
-  async verify(payload: WebhookPayload, signature: SignatureHeader, secret: string): Promise<boolean> {
+  async verify(
+    payload: WebhookPayload,
+    signature: SignatureHeader,
+    secret: string,
+    options: VerifyOptions = {},
+  ): Promise<boolean> {
     if (!secret) {
       throw new DialgemError(
         "Webhook secret is empty. Set the agent's `webhook_signing_secret` and pass the same value here.",
       )
     }
-    const received = firstHeader(signature)?.trim().toLowerCase()
-    if (!received || !/^[0-9a-f]{64}$/.test(received)) return false
-    const expected = await hmacSha256Hex(secret, toBytes(payload))
+    const match = SIGNATURE_RE.exec(firstHeader(signature)?.trim().toLowerCase() ?? "")
+    if (!match) return false
+    const [, timestamp, received] = match as unknown as [string, string, string]
+    const now = options.now ?? Date.now()
+    if (Math.abs(now - Number(timestamp)) > (options.toleranceMs ?? DEFAULT_SIGNATURE_TOLERANCE_MS)) {
+      return false
+    }
+    const body = toBytes(payload)
+    const message = new Uint8Array(body.length + timestamp.length)
+    message.set(body, 0)
+    message.set(encoder.encode(timestamp), body.length)
+    const expected = await hmacSha256Hex(secret, message)
     return timingSafeEqual(expected, received)
   }
 
   /**
-   * Verifies the signature, then parses the body.
+   * Verifies a webhook's signature, then parses its body.
    *
-   * @throws WebhookVerificationError if the signature is missing or does not match.
+   * @throws WebhookVerificationError if the signature is missing, invalid or stale.
    */
-  async constructEvent(payload: WebhookPayload, signature: SignatureHeader, secret: string): Promise<WebhookEvent> {
+  async constructEvent(
+    payload: WebhookPayload,
+    signature: SignatureHeader,
+    secret: string,
+    options: VerifyOptions = {},
+  ): Promise<WebhookEvent> {
+    const parsed = await this.#verifiedJson(payload, signature, secret, options)
+    if (typeof parsed !== "object" || parsed === null || typeof (parsed as { event?: unknown }).event !== "string") {
+      throw new WebhookVerificationError("Webhook body has no `event` field.")
+    }
+    return parsed as WebhookEvent
+  }
+
+  /**
+   * Verifies a request Dialgem made to one of your custom functions, then parses
+   * its body. For functions with `args_at_root`, the body is the arguments object
+   * alone; use `verify` and parse it yourself.
+   *
+   * @throws WebhookVerificationError if the signature is missing, invalid or stale.
+   */
+  async constructFunctionCall<Args = Record<string, unknown>>(
+    payload: WebhookPayload,
+    signature: SignatureHeader,
+    secret: string,
+    options: VerifyOptions = {},
+  ): Promise<FunctionCallRequest<Args>> {
+    const parsed = await this.#verifiedJson(payload, signature, secret, options)
+    const body = parsed as Partial<FunctionCallRequest<Args>> | null
+    if (!body || typeof body.name !== "string" || typeof body.call !== "object" || body.call === null) {
+      throw new WebhookVerificationError(
+        "Function request body has no `name` and `call`. Does this function have args_at_root set?",
+      )
+    }
+    return body as FunctionCallRequest<Args>
+  }
+
+  async #verifiedJson(
+    payload: WebhookPayload,
+    signature: SignatureHeader,
+    secret: string,
+    options: VerifyOptions,
+  ): Promise<unknown> {
     if (!firstHeader(signature)) {
       throw new WebhookVerificationError(
         `Missing ${WEBHOOK_SIGNATURE_HEADER} header. Is a webhook_signing_secret set on the agent?`,
       )
     }
-    if (!(await this.verify(payload, signature, secret))) {
+    if (!(await this.verify(payload, signature, secret, options))) {
       throw new WebhookVerificationError(
-        "Webhook signature does not match the body. Check the secret, and that the body was not re-serialized before verification.",
+        "Signature is invalid or older than the allowed tolerance. Check the secret, the server clock, and that the body was not re-serialized before verification.",
       )
     }
     const text = typeof payload === "string" ? payload : decoder.decode(toBytes(payload))
-    let parsed: unknown
     try {
-      parsed = JSON.parse(text)
+      return JSON.parse(text)
     } catch {
-      throw new WebhookVerificationError("Webhook body is signed but is not valid JSON.")
+      throw new WebhookVerificationError("Body is signed but is not valid JSON.")
     }
-    if (typeof parsed !== "object" || parsed === null || typeof (parsed as { event?: unknown }).event !== "string") {
-      throw new WebhookVerificationError("Webhook body has no `event` field.")
-    }
-    return parsed as WebhookEvent
   }
 }
 

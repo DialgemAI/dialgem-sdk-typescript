@@ -94,7 +94,16 @@ const { call_id } = await dialgem.calls.createPhoneCall({
   to: "+14155550199",
   agent_id: agent.id,
   dialgem_llm_dynamic_variables: { customer_name: "Sam" },
+  metadata: { crm_id: "42" }, // your own data; returned on the call and in every webhook
 })
+```
+
+Manage it afterwards:
+
+```ts
+await dialgem.calls.update(call_id, { metadata: { crm_id: "42", campaign: "renewals" } })
+await dialgem.calls.stop(call_id) // end it now; disconnection_reason becomes "manual_stopped"
+await dialgem.calls.delete(call_id) // a finished call: record, transcript and recording
 ```
 
 ### 3. Bring your own Twilio number
@@ -118,7 +127,13 @@ Your Twilio credentials are never shared with Dialgem. `stream_url` is signed an
 
 ### 4. Verify webhooks
 
-Set `webhook_url`, `webhook_events` and `webhook_signing_secret` on the agent. Dialgem then POSTs `call_started`, `call_ended` and `call_analyzed` events, each signed with HMAC-SHA256 in the `x-dialgem-signature` header.
+Set `webhook_url`, `webhook_events` and `webhook_signing_secret` on the agent. Dialgem then POSTs `call_started`, `call_ended` and `call_analyzed` events. Each body is `{ event, call_id, agent_id, call }`, where `call` is the full call record, and each request is signed:
+
+```
+x-dialgem-signature: v=<timestamp_ms>,d=<hex>      hex = HMAC-SHA256(secret, raw_body + timestamp_ms)
+```
+
+`constructEvent` and `verify` check the HMAC and reject signatures more than 5 minutes old, so a captured request cannot be replayed. `call_ended` arrives as soon as the call ends; `call_analyzed` follows once the summary, sentiment and your extracted variables are ready.
 
 > **Verify the raw body.** The signature covers the exact bytes Dialgem sent. A body that was parsed and re-serialized, for example by `express.json()`, will never verify, even when the JSON is identical.
 
@@ -130,7 +145,7 @@ import { Dialgem, WebhookVerificationError } from "@dialgem/sdk"
 app.post("/webhooks/dialgem", express.raw({ type: "application/json" }), async (req, res) => {
   try {
     const event = await Dialgem.webhooks.constructEvent(req.body, req.header("x-dialgem-signature"), SECRET)
-    if (event.event === "call_analyzed") await crm.update(event.call_id, event.analysis.variables)
+    if (event.event === "call_analyzed") await crm.update(event.call.metadata.crm_id, event.call.analysis?.variables)
     res.sendStatus(204)
   } catch (err) {
     if (err instanceof WebhookVerificationError) return res.status(400).send(err.message)
@@ -155,26 +170,37 @@ export async function POST(request: Request) {
 
 **Fastify**: register a buffer parser for `application/json` on the webhook route. See `examples/webhook-fastify.ts`.
 
-`event` is a discriminated union, so `switch (event.event)` narrows the payload type. A failed delivery is retried once, so make your handler idempotent on `(event, call_id)`. Respond within 10 seconds and queue any slow work. `webhooks.verify(body, signature, secret)` returns a boolean if you prefer to handle rejection yourself.
+`event` is a discriminated union, so `switch (event.event)` narrows the payload type. A failed delivery is retried up to three times; every attempt carries the same `x-dialgem-delivery` header, so drop an id you have already processed. Respond within 10 seconds and queue any slow work. `webhooks.verify(body, signature, secret)` returns a boolean if you prefer to handle rejection yourself.
+
+**Verifying your custom functions.** When the agent calls one of your functions, the request is signed the same way, and its body is `{ name, call, args }`:
+
+```ts
+app.post("/functions/lookup-order", express.raw({ type: "application/json" }), async (req, res) => {
+  const { args, call } = await Dialgem.webhooks.constructFunctionCall<{ order_id: string }>(
+    req.body, req.header("x-dialgem-signature"), SECRET,
+  )
+  res.json(await orders.find(args.order_id, call.metadata.crm_id))
+})
+```
+
+A function created with `args_at_root: true` receives the arguments object alone instead.
 
 ### 5. Export calls and transcripts
 
 `calls.list()` returns one page when you `await` it. Iterate over it with `for await` to walk every page:
 
 ```ts
-const cutoff = "2026-09-01T00:00:00"
-for await (const call of dialgem.calls.list({ page_size: 50 })) {
-  if (call.started_at < cutoff) break // newest first: the rest are older
-  console.log(call.id, call.duration_s, call.analysis?.call_successful, call.transcript)
+const since = Date.parse("2026-09-01T00:00:00Z")
+for await (const call of dialgem.calls.list({ start_after: since, status: "completed", limit: 50 })) {
+  console.log(call.id, call.duration_ms, call.analysis?.call_summary, call.transcript_text)
 }
 
-const page = await dialgem.calls.list({ page_size: 50 })
+const page = await dialgem.calls.list({ agent_id: agent.id, metadata: { crm_id: "42" }, limit: 50 })
 page.data // Call[]
-page.total // number
 if (page.hasNextPage()) await page.getNextPage()
 ```
 
-Pages are offset-based and ordered newest first. A call that starts mid-export shifts later pages by one, so de-duplicate on `id` if exactness matters.
+Filters: `agent_id`, `status`, `direction`, `call_type`, `disconnection_reason`, `from_number`, `to_number`, `user_sentiment`, `call_successful`, `start_after` / `start_before` (epoch ms), `metadata`, `search` and `sort_order`. Pages are cursor-based, so walking them is stable while new calls arrive.
 
 ## Errors
 
@@ -223,11 +249,11 @@ The SDK never follows redirects. The API does not issue them, and following one 
 | `agents.functions` | `list`, `create`, `update`, `delete`, `reorder` |
 | `agents.knowledge` | `list`, `create`, `delete` |
 | `agents.mcpServers` | `list`, `create`, `update`, `delete`, `test` |
-| `calls` | `list`, `retrieve`, `createPhoneCall`, `register` |
+| `calls` | `list`, `retrieve`, `update`, `delete`, `stop`, `createPhoneCall`, `register` |
 | `phoneNumbers` | `create`, `list`, `update`, `assign`, `delete` |
 | `voices` | `list` |
 | `flowTemplates`, `promptTemplates` | `list`, `retrieve` |
-| `webhooks` | `verify`, `constructEvent` |
+| `webhooks` | `verify`, `constructEvent`, `constructFunctionCall` |
 
 In-browser web calls are not part of this package.
 

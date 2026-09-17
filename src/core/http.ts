@@ -56,7 +56,9 @@ export interface RequestOptions {
   headers?: Record<string, string> | undefined
 }
 
-export type QueryValue = string | number | boolean | null | undefined
+export type QueryScalar = string | number | boolean
+/** Arrays are sent as repeated parameters: `{ status: ["a", "b"] }` → `?status=a&status=b`. */
+export type QueryValue = QueryScalar | QueryScalar[] | null | undefined
 export type Query = Record<string, QueryValue>
 
 export interface HttpClientOptions {
@@ -190,7 +192,7 @@ export class HttpClient {
     const params = new URLSearchParams()
     for (const [key, value] of Object.entries(query)) {
       if (value === undefined || value === null) continue
-      params.append(key, String(value))
+      for (const item of Array.isArray(value) ? value : [value]) params.append(key, String(item))
     }
     const qs = params.toString()
     return qs ? `${url}?${qs}` : url

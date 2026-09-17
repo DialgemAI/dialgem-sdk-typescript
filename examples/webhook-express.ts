@@ -4,11 +4,12 @@
  * The signature covers the raw bytes, so this route uses `express.raw()`.
  * `express.json()` would re-serialize the body and every signature would fail.
  */
-import { Dialgem, WEBHOOK_SIGNATURE_HEADER, WebhookVerificationError } from "@dialgem/sdk"
+import { Dialgem, WEBHOOK_DELIVERY_HEADER, WEBHOOK_SIGNATURE_HEADER, WebhookVerificationError } from "@dialgem/sdk"
 import express from "express"
 
 const secret = process.env["DIALGEM_WEBHOOK_SECRET"]!
 const app = express()
+const seenDeliveries = new Set<string>() // use your database in production
 
 app.post("/webhooks/dialgem", express.raw({ type: "application/json" }), async (req, res) => {
   let event
@@ -19,16 +20,21 @@ app.post("/webhooks/dialgem", express.raw({ type: "application/json" }), async (
     throw err
   }
 
-  // A failed delivery is retried once, so handle each (event, call_id) idempotently.
+  // A failed delivery is retried; every attempt carries the same delivery id.
+  const deliveryId = req.header(WEBHOOK_DELIVERY_HEADER)
+  if (deliveryId && seenDeliveries.has(deliveryId)) return res.sendStatus(204)
+  if (deliveryId) seenDeliveries.add(deliveryId)
+
+  const { call } = event
   switch (event.event) {
     case "call_started":
-      console.log(`call ${event.call_id} started`)
-      break
-    case "call_analyzed":
-      console.log(`call ${event.call_id}: sentiment ${event.analysis.user_sentiment}`, event.analysis.variables)
+      console.log(`call ${call.id} started for customer ${String(call.metadata["crm_id"])}`)
       break
     case "call_ended":
-      console.log(`call ${event.call_id} ${event.status} after ${event.duration_s}s`)
+      console.log(`call ${call.id} ended (${call.disconnection_reason}) after ${call.duration_ms} ms`)
+      break
+    case "call_analyzed":
+      console.log(`call ${call.id}: ${call.analysis?.call_summary}`, call.analysis?.variables)
       break
   }
 

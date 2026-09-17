@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.0-beta.1 (unreleased)
+
+### Breaking changes
+- **Webhook signatures are timestamped.** `x-dialgem-signature` is now `v=<timestamp_ms>,d=<hex>`, where the HMAC covers the raw body plus the timestamp. `verify` and `constructEvent` also reject signatures more than 5 minutes old; set `toleranceMs` or `now` to change that. Signatures from 0.1.0-beta.0 no longer verify.
+- **Webhook payloads carry the full call record.** Every event is `{ event, call_id, agent_id, call }`. The flat fields (`status`, `duration_s`, `analysis`) now live under `call`.
+- **`calls.list` pages are cursor-based.** A page is `{ data, has_more, pagination_key }`. `page`, `page_size` and `total` are gone; use `limit`.
+
+### Added
+- `calls.update` (replace metadata), `calls.delete` and `calls.stop`.
+- `metadata` on `createPhoneCall` and `register`.
+- New call record fields: `metadata`, `dynamic_variables`, `start_timestamp`, `end_timestamp`, `ended_at`, `duration_ms`, `transcript_text`, `in_voicemail` and `latency` (per-stage p50/p90/p95/p99). Post-call analysis gains `call_summary` and `in_voicemail`.
+- `calls.list` filters: `agent_id`, `status` (one or several), `direction`, `call_type`, `disconnection_reason`, `from_number`, `to_number`, `user_sentiment`, `call_successful`, `start_after`, `start_before`, `metadata`, `sort_order`.
+- `webhooks.constructFunctionCall` verifies and parses signed requests to your custom functions (`{ name, call, args }`).
+- `AgentFunction.args_at_root`.
+
 ## 0.1.0-beta.0 (unreleased)
 
 The first release.
