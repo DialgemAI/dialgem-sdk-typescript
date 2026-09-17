@@ -73,17 +73,17 @@ describe.skipIf(!apiKey || !baseURL)("live: Dialgem API", () => {
     expect(Array.isArray(await dialgem.promptTemplates.list())).toBe(true)
   })
 
-  it("paginates calls", async () => {
-    const page = await dialgem.calls.list({ page_size: 2 })
-    expect(page.page).toBe(1)
-    expect(page.page_size).toBe(2)
-    expect(typeof page.total).toBe("number")
-    let n = 0
-    for await (const call of dialgem.calls.list({ page_size: 50 })) {
-      expect(typeof call.id).toBe("string")
-      if (++n >= 120) break
+  it("paginates calls with a cursor, without repeats", async () => {
+    const page = await dialgem.calls.list({ limit: 2 })
+    expect(page.data.length).toBeLessThanOrEqual(2)
+    expect(typeof page.has_more).toBe("boolean")
+    const ids = new Set<string>()
+    for await (const call of dialgem.calls.list({ limit: 50 })) {
+      expect(ids.has(call.id)).toBe(false)
+      ids.add(call.id)
+      expect(typeof call.start_timestamp === "number" || call.start_timestamp === null).toBe(true)
+      if (ids.size >= 120) break
     }
-    expect(n).toBe(Math.min(page.total, 120))
   })
 
   it("rejects a bad key with AuthenticationError", async () => {

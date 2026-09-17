@@ -44,7 +44,8 @@ for (const [label, sdk] of [
   })
 
   for (const v of vectors.vectors) {
-    assert.equal(await sdk.webhooks.verify(v.body, v.sig, vectors.secret), true, `${label}: webhook verify`)
+    const ok = await sdk.webhooks.verify(v.body, v.signature, vectors.secret, { now: v.timestamp })
+    assert.equal(ok, true, `${label}: webhook verify`)
   }
   assert.equal(sdk.VERSION, JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")).version)
   console.log(`✓ ${label} on node ${process.version}`)

@@ -3,70 +3,75 @@ import { describe, expect, it } from "vitest"
 
 import { client, mockFetch, type RecordedRequest } from "./helpers.js"
 
-/** A fake `GET /v1/calls` over `total` calls, honouring page/page_size like the API does. */
+/**
+ * A fake `GET /v1/calls` in cursor mode over `total` calls. The cursor names the
+ * index of the last call returned, standing in for the API's opaque keyset key.
+ */
 function callsServer(total: number) {
   return (req: RecordedRequest) => {
     const url = new URL(req.url)
-    const page = Number(url.searchParams.get("page") ?? 1)
-    const pageSize = Number(url.searchParams.get("page_size") ?? 10)
-    const start = (page - 1) * pageSize
-    const calls = Array.from({ length: Math.max(0, Math.min(pageSize, total - start)) }, (_, i) => ({
+    const limit = Number(url.searchParams.get("limit"))
+    const key = url.searchParams.get("pagination_key")
+    const start = key === null ? 0 : Number(key.replace("after-", "")) + 1
+    const calls = Array.from({ length: Math.max(0, Math.min(limit, total - start)) }, (_, i) => ({
       id: `call_${start + i}`,
     }))
-    return { body: { calls, total, page, page_size: pageSize } }
+    const has_more = start + calls.length < total
+    return {
+      body: { calls, has_more, pagination_key: has_more ? `after-${start + calls.length - 1}` : null },
+    }
   }
 }
 
 describe("calls.list pagination", () => {
-  it("awaits to a single page with metadata", async () => {
+  it("awaits to a single page", async () => {
     const { fetch, calls } = mockFetch(callsServer(25))
-    const page = await client(fetch).calls.list({ page_size: 10, status: "completed" })
+    const page = await client(fetch).calls.list({ limit: 10, status: "completed" })
 
     expect(page.data.map((c) => c.id)).toEqual(Array.from({ length: 10 }, (_, i) => `call_${i}`))
-    expect(page).toMatchObject({ total: 25, page: 1, page_size: 10 })
+    expect(page.has_more).toBe(true)
     expect(page.hasNextPage()).toBe(true)
     expect(calls).toHaveLength(1)
-    expect(new URL(calls[0]!.url).searchParams.get("status")).toBe("completed")
+    const params = new URL(calls[0]!.url).searchParams
+    expect(params.get("status")).toBe("completed")
+    expect(params.get("limit")).toBe("10")
+    expect(params.has("pagination_key")).toBe(false)
   })
 
-  it("iterates every item across pages and stops at total", async () => {
+  it("always asks for cursor mode, defaulting the limit", async () => {
+    const { fetch, calls } = mockFetch(callsServer(3))
+    await client(fetch).calls.list()
+    expect(new URL(calls[0]!.url).searchParams.get("limit")).toBe("10")
+  })
+
+  it("iterates every item across pages, passing the cursor back", async () => {
     const { fetch, calls } = mockFetch(callsServer(25))
     const seen: Call[] = []
-    for await (const call of client(fetch).calls.list({ page_size: 10 })) seen.push(call)
+    for await (const call of client(fetch).calls.list({ limit: 10 })) seen.push(call)
 
     expect(seen.map((c) => c.id)).toEqual(Array.from({ length: 25 }, (_, i) => `call_${i}`))
-    expect(calls.map((r) => new URL(r.url).searchParams.get("page"))).toEqual(["1", "2", "3"])
+    expect(calls.map((r) => new URL(r.url).searchParams.get("pagination_key"))).toEqual([null, "after-9", "after-19"])
   })
 
-  it("does not request a page past an exact multiple", async () => {
+  it("stops when the server says there is no more, even on a full page", async () => {
     const { fetch, calls } = mockFetch(callsServer(20))
     let n = 0
-    for await (const _ of client(fetch).calls.list({ page_size: 10 })) n++
+    for await (const _ of client(fetch).calls.list({ limit: 10 })) n++
     expect(n).toBe(20)
     expect(calls).toHaveLength(2)
   })
 
-  it("starts from the requested page", async () => {
-    const { fetch } = mockFetch(callsServer(25))
+  it("stops when has_more is true but no key came back", async () => {
+    const { fetch, calls } = mockFetch(() => ({ body: { calls: [{ id: "a" }], has_more: true, pagination_key: null } }))
     const ids: string[] = []
-    for await (const call of client(fetch).calls.list({ page: 3, page_size: 10 })) ids.push(call.id)
-    expect(ids).toEqual(["call_20", "call_21", "call_22", "call_23", "call_24"])
-  })
-
-  it("stops on an empty page even if total says otherwise (rows deleted mid-iteration)", async () => {
-    const { fetch, calls } = mockFetch((req) => {
-      const page = Number(new URL(req.url).searchParams.get("page"))
-      return { body: { calls: page === 1 ? [{ id: "a" }] : [], total: 50, page, page_size: 1 } }
-    })
-    const ids: string[] = []
-    for await (const call of client(fetch).calls.list({ page_size: 1 })) ids.push(call.id)
+    for await (const call of client(fetch).calls.list()) ids.push(call.id)
     expect(ids).toEqual(["a"])
-    expect(calls).toHaveLength(2)
+    expect(calls).toHaveLength(1)
   })
 
   it("is lazy, and awaiting then iterating reuses page one", async () => {
     const { fetch, calls } = mockFetch(callsServer(15))
-    const list = client(fetch).calls.list({ page_size: 10 })
+    const list = client(fetch).calls.list({ limit: 10 })
     expect(calls).toHaveLength(0)
 
     await list
@@ -78,10 +83,35 @@ describe("calls.list pagination", () => {
 
   it("getNextPage walks forward and refuses past the end", async () => {
     const { fetch } = mockFetch(callsServer(15))
-    const first = await client(fetch).calls.list({ page_size: 10 })
+    const first = await client(fetch).calls.list({ limit: 10 })
     const second = await first.getNextPage()
     expect(second.data).toHaveLength(5)
     expect(second.hasNextPage()).toBe(false)
     await expect(second.getNextPage()).rejects.toThrow(/No next page/)
+  })
+})
+
+describe("calls.list filters", () => {
+  it("sends arrays as repeated parameters and metadata as metadata.<key>", async () => {
+    const { fetch, calls } = mockFetch(callsServer(0))
+    await client(fetch).calls.list({
+      agent_id: ["a1", "a2"],
+      status: ["completed", "failed"],
+      disconnection_reason: "user_hangup",
+      call_successful: false,
+      start_after: 1767225600000,
+      metadata: { crm_id: 42, tier: "gold" },
+      sort_order: "asc",
+    })
+    const params = new URL(calls[0]!.url).searchParams
+    expect(params.getAll("agent_id")).toEqual(["a1", "a2"])
+    expect(params.getAll("status")).toEqual(["completed", "failed"])
+    expect(params.get("disconnection_reason")).toBe("user_hangup")
+    expect(params.get("call_successful")).toBe("false")
+    expect(params.get("start_after")).toBe("1767225600000")
+    expect(params.get("metadata.crm_id")).toBe("42")
+    expect(params.get("metadata.tier")).toBe("gold")
+    expect(params.get("sort_order")).toBe("asc")
+    expect(params.has("metadata")).toBe(false)
   })
 })

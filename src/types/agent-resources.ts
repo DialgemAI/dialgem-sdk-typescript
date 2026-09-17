@@ -15,6 +15,11 @@ export interface AgentFunction {
   query_params: KeyValuePair[]
   speak_during_execution: string | null
   speak_after_execution: boolean
+  /**
+   * `false` (the default for new functions): the request body is
+   * `{ name, call, args }`. `true`: the body is the arguments object alone.
+   */
+  args_at_root: boolean
   sort_order: number
   kind: FunctionKind
   /** Kind-specific settings (e.g. Cal.com credentials for the `*_cal` kinds). */

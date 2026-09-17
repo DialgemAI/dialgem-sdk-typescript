@@ -1,8 +1,24 @@
 {
-  "_comment": "Produced by Python exactly as the Dialgem service signs webhooks: json.dumps({'event': ..., **payload}, default=str) then hex HMAC-SHA256. Do not hand-edit; a hand-built body would test JS against JS.",
+  "_comment": "Produced by the Dialgem service's own signing code (app/agent/signing.py) over bodies serialized exactly as the service serializes them. Do not hand-edit; a hand-built vector would test JS against JS.",
   "secret": "whsec_test_4f1c",
   "vectors": [
-    {"body": "{\"event\": \"call_ended\", \"call_id\": \"6f1d2b9e-0c55-4a3e-9d0b-2f7c1c9a1e11\", \"agent_id\": \"0b8f3c2a-7d44-4e19-8a61-5b2e9d7c3f00\", \"status\": \"completed\", \"duration_s\": 42.5}", "sig": "be60e2fca0fbb0a63198c5f2f67e7f9c1eb57b95bafc8ac0536d17250f1fe55b"},
-    {"body": "{\"event\": \"call_analyzed\", \"call_id\": \"c1\", \"agent_id\": \"a1\", \"analysis\": {\"variables\": {\"name\": \"Zo\\u00eb\"}, \"model\": \"m\", \"extracted_at\": \"2026-09-15T10:00:00\", \"user_sentiment\": \"Positive\", \"call_successful\": true, \"error\": null}}", "sig": "1d50906b9b9bb8e3736db977846266906b3c5346d11a0a66ad853c64ff6732b0"}
+    {
+      "kind": "event",
+      "body": "{\"event\":\"call_ended\",\"call_id\":\"6f1d2b9e-0c55-4a3e-9d0b-2f7c1c9a1e11\",\"agent_id\":\"0b8f3c2a-7d44-4e19-8a61-5b2e9d7c3f00\",\"call\":{\"id\":\"6f1d2b9e-0c55-4a3e-9d0b-2f7c1c9a1e11\",\"agent_id\":\"0b8f3c2a-7d44-4e19-8a61-5b2e9d7c3f00\",\"agent_name\":\"Front desk\",\"status\":\"completed\",\"call_status\":\"ended\",\"call_type\":\"phone_call\",\"direction\":\"inbound\",\"metadata\":{\"crm_id\":\"42\"},\"dynamic_variables\":{\"name\":\"Zoë\"},\"started_at\":\"2026-01-01T00:00:00\",\"ended_at\":\"2026-01-01T00:00:42.500000\",\"start_timestamp\":1767225600000,\"end_timestamp\":1767225642500,\"duration_s\":42.5,\"duration_ms\":42500,\"phone_number\":\"+14155550100\",\"from_number\":\"+14155550100\",\"to_number\":\"+14155550199\",\"call_sid\":\"CA1\",\"origination_state\":\"answered\",\"transcript\":[{\"role\":\"agent\",\"text\":\"Hi Zoë\",\"timestamp\":\"2026-01-01T00:00:01\"}],\"transcript_text\":\"Agent: Hi Zoë\",\"recording_url\":null,\"events\":[],\"disconnection_reason\":\"user_hangup\",\"in_voicemail\":false,\"amd_result\":null,\"analysis\":{\"variables\":{},\"model\":\"m\",\"extracted_at\":\"2026-01-01T00:00:50\",\"call_summary\":\"Greeted Zoë.\",\"user_sentiment\":\"Positive\",\"call_successful\":true,\"in_voicemail\":false,\"error\":null},\"call_cost\":null,\"end_to_end_latency_ms\":812.0,\"latency\":{\"e2e\":{\"p50\":800,\"p90\":900,\"p95\":950,\"p99\":990,\"min\":700,\"max\":1000,\"num\":4}}}}",
+      "timestamp": 1767225600000,
+      "signature": "v=1767225600000,d=ff003ccd1cf5010b01fb30e5cd4cc4a2cd31a9ad55cf31440d334ede53cb51cc"
+    },
+    {
+      "kind": "event",
+      "body": "{\"event\":\"call_analyzed\",\"call_id\":\"6f1d2b9e-0c55-4a3e-9d0b-2f7c1c9a1e11\",\"agent_id\":\"0b8f3c2a-7d44-4e19-8a61-5b2e9d7c3f00\",\"call\":{\"id\":\"6f1d2b9e-0c55-4a3e-9d0b-2f7c1c9a1e11\",\"agent_id\":\"0b8f3c2a-7d44-4e19-8a61-5b2e9d7c3f00\",\"agent_name\":\"Front desk\",\"status\":\"completed\",\"call_status\":\"ended\",\"call_type\":\"phone_call\",\"direction\":\"inbound\",\"metadata\":{\"crm_id\":\"42\"},\"dynamic_variables\":{\"name\":\"Zoë\"},\"started_at\":\"2026-01-01T00:00:00\",\"ended_at\":\"2026-01-01T00:00:42.500000\",\"start_timestamp\":1767225600000,\"end_timestamp\":1767225642500,\"duration_s\":42.5,\"duration_ms\":42500,\"phone_number\":\"+14155550100\",\"from_number\":\"+14155550100\",\"to_number\":\"+14155550199\",\"call_sid\":\"CA1\",\"origination_state\":\"answered\",\"transcript\":[{\"role\":\"agent\",\"text\":\"Hi Zoë\",\"timestamp\":\"2026-01-01T00:00:01\"}],\"transcript_text\":\"Agent: Hi Zoë\",\"recording_url\":null,\"events\":[],\"disconnection_reason\":\"user_hangup\",\"in_voicemail\":false,\"amd_result\":null,\"analysis\":{\"variables\":{},\"model\":\"m\",\"extracted_at\":\"2026-01-01T00:00:50\",\"call_summary\":\"Greeted Zoë.\",\"user_sentiment\":\"Positive\",\"call_successful\":true,\"in_voicemail\":false,\"error\":null},\"call_cost\":null,\"end_to_end_latency_ms\":812.0,\"latency\":{\"e2e\":{\"p50\":800,\"p90\":900,\"p95\":950,\"p99\":990,\"min\":700,\"max\":1000,\"num\":4}}}}",
+      "timestamp": 1767225600000,
+      "signature": "v=1767225600000,d=5efd61577d54fbc0dc281873e2974f223a4ae29154cc92146cae6e78d08436ad"
+    },
+    {
+      "kind": "function",
+      "body": "{\"name\":\"lookup_order\",\"call\":{\"call_id\":\"6f1d2b9e-0c55-4a3e-9d0b-2f7c1c9a1e11\",\"agent_id\":\"0b8f3c2a-7d44-4e19-8a61-5b2e9d7c3f00\",\"call_type\":\"phone_call\",\"direction\":\"inbound\",\"from_number\":\"+14155550199\",\"to_number\":\"+14155550100\",\"dynamic_variables\":{\"name\":\"Zoë\"},\"metadata\":{\"crm_id\":\"42\"}},\"args\":{\"order_id\":\"A1\"}}",
+      "timestamp": 1767225600000,
+      "signature": "v=1767225600000,d=9110bbc00c9f52afc6c500986f9de66aeb1e90a539e4ac68730933b9015fc828"
+    }
   ]
 }

@@ -37,8 +37,11 @@ export const SDK_CALLS: SdkCall[] = [
   { name: "agents.mcpServers.delete", invoke: (c) => c.agents.mcpServers.delete("ag_1", "srv_1"), method: "DELETE", path: "/v1/agents/ag_1/mcp-servers/srv_1" },
   { name: "agents.mcpServers.test", invoke: (c) => c.agents.mcpServers.test("ag_1", "srv_1"), method: "POST", path: "/v1/agents/ag_1/mcp-servers/srv_1/test" },
 
-  { name: "calls.list", invoke: (c) => c.calls.list(), method: "GET", path: "/v1/calls?page=1" },
+  { name: "calls.list", invoke: (c) => c.calls.list(), method: "GET", path: "/v1/calls?limit=10" },
   { name: "calls.retrieve", invoke: (c) => c.calls.retrieve("call_1"), method: "GET", path: "/v1/calls/call_1" },
+  { name: "calls.update", invoke: (c) => c.calls.update("call_1", { metadata: { crm_id: "42" } }), method: "PATCH", path: "/v1/calls/call_1", body: { metadata: { crm_id: "42" } } },
+  { name: "calls.delete", invoke: (c) => c.calls.delete("call_1"), method: "DELETE", path: "/v1/calls/call_1" },
+  { name: "calls.stop", invoke: (c) => c.calls.stop("call_1"), method: "POST", path: "/v1/calls/call_1/stop" },
   {
     name: "calls.createPhoneCall",
     invoke: (c) => c.calls.createPhoneCall({ from_: "+14155550100", to: "+14155550199", agent_id: "ag_1" }),

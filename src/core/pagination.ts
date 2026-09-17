@@ -1,69 +1,63 @@
 /**
- * Page-based pagination, the only style the API uses today (`GET /v1/calls`:
- * `page` ≥ 1, `page_size` ≤ 100, envelope carrying `total`).
+ * Cursor pagination, as used by `GET /v1/calls`.
  *
  * `list()` returns a `PagePromise`, which is both awaitable (one page) and
  * async-iterable (every item across pages):
  *
- *   const first = await client.calls.list({ page_size: 50 })
+ *   const page = await client.calls.list({ limit: 50 })
  *   for await (const call of client.calls.list({ status: "completed" })) { ... }
  *
- * Offset pages are not a snapshot. Calls are ordered newest-first, so a call that
- * starts mid-iteration shifts later pages by one and the iterator can yield a
- * call twice. De-duplicate on `id` when that matters.
+ * Pages are keyset-based, so walking them is stable while new calls arrive: no
+ * call is skipped or repeated because another one started mid-walk.
  */
 import { DialgemError } from "./errors.js"
 
-export interface PageFetcher<T> {
-  (page: number): Promise<PageData<T>>
-}
-
 export interface PageData<T> {
   data: T[]
-  total: number
-  page: number
-  page_size: number
+  has_more: boolean
+  /** Pass to the next request to continue; `null` on the last page. */
+  pagination_key: string | null
 }
+
+export type PageFetcher<T> = (paginationKey: string | null) => Promise<PageData<T>>
 
 export class Page<T> implements PageData<T> {
   readonly data: T[]
-  readonly total: number
-  readonly page: number
-  readonly page_size: number
+  readonly has_more: boolean
+  readonly pagination_key: string | null
   readonly #fetchPage: PageFetcher<T>
 
   constructor(data: PageData<T>, fetchPage: PageFetcher<T>) {
     this.data = data.data
-    this.total = data.total
-    this.page = data.page
-    this.page_size = data.page_size
+    this.has_more = data.has_more
+    this.pagination_key = data.pagination_key
     this.#fetchPage = fetchPage
   }
 
   hasNextPage(): boolean {
-    return this.data.length > 0 && this.page * this.page_size < this.total
+    return this.has_more && this.pagination_key !== null
   }
 
   async getNextPage(): Promise<Page<T>> {
     if (!this.hasNextPage()) throw new DialgemError("No next page; check hasNextPage() first.")
-    return new Page(await this.#fetchPage(this.page + 1), this.#fetchPage)
+    return new Page(await this.#fetchPage(this.pagination_key), this.#fetchPage)
   }
 }
 
 export class PagePromise<T> implements PromiseLike<Page<T>>, AsyncIterable<T> {
   readonly #fetchPage: PageFetcher<T>
-  readonly #startPage: number
+  readonly #startKey: string | null
   #first: Promise<Page<T>> | undefined
 
-  constructor(fetchPage: PageFetcher<T>, startPage: number) {
+  constructor(fetchPage: PageFetcher<T>, startKey: string | null = null) {
     this.#fetchPage = fetchPage
-    this.#startPage = startPage
+    this.#startKey = startKey
   }
 
   #firstPage(): Promise<Page<T>> {
     // Lazy and memoised: nothing is sent until awaited or iterated, and awaiting
     // then iterating the same PagePromise does not refetch page one.
-    this.#first ??= this.#fetchPage(this.#startPage).then((data) => new Page(data, this.#fetchPage))
+    this.#first ??= this.#fetchPage(this.#startKey).then((data) => new Page(data, this.#fetchPage))
     return this.#first
   }
 

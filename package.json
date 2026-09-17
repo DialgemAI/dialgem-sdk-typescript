@@ -1,6 +1,6 @@
 {
   "name": "@dialgem/sdk",
-  "version": "0.1.0-beta.0",
+  "version": "0.1.0-beta.1",
   "description": "Official TypeScript SDK for the Dialgem voice AI API: agents, calls, phone numbers and webhook verification from your backend.",
   "keywords": [
     "dialgem",

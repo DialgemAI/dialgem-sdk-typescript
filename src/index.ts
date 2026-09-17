@@ -26,9 +26,12 @@ export { Page, PagePromise, type PageData } from "./core/pagination.js"
 export {
   Webhooks,
   webhooks,
+  DEFAULT_SIGNATURE_TOLERANCE_MS,
+  WEBHOOK_DELIVERY_HEADER,
   WEBHOOK_EVENT_HEADER,
   WEBHOOK_SIGNATURE_HEADER,
   type SignatureHeader,
+  type VerifyOptions,
   type WebhookPayload,
 } from "./webhooks.js"
 
@@ -43,4 +46,11 @@ export type * from "./types/agent-resources.js"
 export type * from "./types/call.js"
 export type * from "./types/phone-number.js"
 export type * from "./types/catalog.js"
-export type { CallAnalyzedEvent, CallEndedEvent, CallStartedEvent, WebhookEvent } from "./types/webhook.js"
+export type {
+  CallAnalyzedEvent,
+  CallEndedEvent,
+  CallStartedEvent,
+  FunctionCallContext,
+  FunctionCallRequest,
+  WebhookEvent,
+} from "./types/webhook.js"

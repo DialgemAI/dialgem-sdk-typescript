@@ -17,7 +17,8 @@ export async function customerCode(): Promise<void> {
   await dialgem.calls.register({ agent_id: "a", call_sid: maybe, from_number: maybe })
   await dialgem.agents.create({ name: "x", first_message: maybe, voice_id: maybe })
   await dialgem.agents.update("a", { name: maybe })
-  await dialgem.calls.list({ status: maybe, page_size: undefined })
+  await dialgem.calls.list({ status: maybe, limit: undefined, start_after: undefined })
+  await dialgem.calls.update("c", { metadata: { crm_id: maybe } })
   await dialgem.voices.list({ search: maybe })
 
   // Required fields stay required.
