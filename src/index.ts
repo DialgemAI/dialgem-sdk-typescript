@@ -1,4 +1,4 @@
-export { Dialgem, DEFAULT_BASE_URL, type ClientOptions } from "./client.js"
+export { Dialgem, BASE_URL, type ClientOptions } from "./client.js"
 export { VERSION } from "./version.js"
 
 export {

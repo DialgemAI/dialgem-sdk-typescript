@@ -10,7 +10,7 @@ declare const maybe: string | undefined
 declare const maybeSignal: AbortSignal | undefined
 
 export async function customerCode(): Promise<void> {
-  const dialgem = new Dialgem({ apiKey: process.env["DIALGEM_API_KEY"], baseURL: process.env["DIALGEM_BASE_URL"] })
+  const dialgem = new Dialgem({ apiKey: process.env["DIALGEM_API_KEY"] })
   const options: RequestOptions = { signal: maybeSignal, timeout: undefined }
 
   await dialgem.calls.createPhoneCall({ from_: "+1", to: "+2", agent_id: maybe }, options)

@@ -1,28 +1,28 @@
 /**
- * Live smoke test against a real Dialgem API. This is the check a fake fetch
+ * Live smoke test against the Dialgem API. This is the check a fake fetch
  * cannot make: that the header, paths and response shapes the SDK assumes are
  * what the running service actually does.
  *
- *   DIALGEM_API_KEY=zk_… DIALGEM_BASE_URL=http://localhost:8002 pnpm test:live
+ *   DIALGEM_API_KEY=zk_… pnpm test:live
  *
- * Use an org API key (`zk_…`, created in the dashboard), not the platform API_KEY:
- * customers only ever hold the former, and it is scoped differently.
- * Creates and deletes one agent. Skipped when the variables are unset.
+ * **Runs against production** (https://api.dialgem.com — the SDK has no other
+ * target). Use an org API key (`zk_…`) for a test organization, never a
+ * customer's: this creates and deletes one agent in that org. Excluded from
+ * `pnpm test`, and skipped when the key is unset.
  */
 import { AuthenticationError, Dialgem, NotFoundError, type Agent } from "@dialgem/sdk"
 import { afterAll, beforeAll, describe, expect, it } from "vitest"
 
 const apiKey = process.env["DIALGEM_API_KEY"]
-const baseURL = process.env["DIALGEM_BASE_URL"]
 
-describe.skipIf(!apiKey || !baseURL)("live: Dialgem API", () => {
+describe.skipIf(!apiKey)("live: Dialgem API", () => {
   // Built in beforeAll, not here: a skipped describe's body still runs during
   // collection, and the constructor throws without a key.
   let dialgem: Dialgem
   let agent: Agent | undefined
 
   beforeAll(() => {
-    dialgem = new Dialgem({ apiKey: apiKey!, baseURL: baseURL! })
+    dialgem = new Dialgem({ apiKey: apiKey! })
   })
 
   afterAll(async () => {
@@ -87,7 +87,7 @@ describe.skipIf(!apiKey || !baseURL)("live: Dialgem API", () => {
   })
 
   it("rejects a bad key with AuthenticationError", async () => {
-    const bad = new Dialgem({ apiKey: "zk_not_a_real_key_000000000000000000000000000", baseURL: baseURL! })
+    const bad = new Dialgem({ apiKey: "zk_not_a_real_key_000000000000000000000000000" })
     const err = await bad.agents.list().catch((e: unknown) => e)
     expect(err).toBeInstanceOf(AuthenticationError)
     expect((err as AuthenticationError).requestId).toBeTruthy()

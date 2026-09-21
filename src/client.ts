@@ -6,7 +6,8 @@ import { FlowTemplates, PromptTemplates, Voices } from "./resources/catalog.js"
 import { PhoneNumbers } from "./resources/phone-numbers.js"
 import { Webhooks, webhooks } from "./webhooks.js"
 
-export const DEFAULT_BASE_URL = "https://api.dialgem.com"
+/** The Dialgem API. Fixed: the SDK talks to Dialgem and nothing else. */
+export const BASE_URL = "https://api.dialgem.com"
 const DEFAULT_TIMEOUT_MS = 60_000
 const DEFAULT_MAX_RETRIES = 2
 
@@ -15,8 +16,6 @@ const DEFAULT_MAX_RETRIES = 2
 export interface ClientOptions {
   /** Organization API key (`zk_…`). Defaults to `process.env.DIALGEM_API_KEY`. */
   apiKey?: string | undefined
-  /** Defaults to `process.env.DIALGEM_BASE_URL`, then `https://api.dialgem.com`. */
-  baseURL?: string | undefined
   /** Per-attempt timeout in milliseconds (> 0). Default 60000. */
   timeout?: number | undefined
   /** Retries for GET/PATCH/DELETE on 408/429/5xx and connection errors. Default 2. POST is not retried. */
@@ -43,7 +42,7 @@ export interface ClientOptions {
  * ```
  */
 export class Dialgem {
-  static readonly DEFAULT_BASE_URL = DEFAULT_BASE_URL
+  static readonly BASE_URL = BASE_URL
   /** Webhook verification without a client instance: `Dialgem.webhooks.constructEvent(...)`. */
   static readonly webhooks: Webhooks = webhooks
 
@@ -55,9 +54,19 @@ export class Dialgem {
   readonly promptTemplates: PromptTemplates
   readonly webhooks: Webhooks = webhooks
 
-  readonly baseURL: string
+  /** Always `https://api.dialgem.com`. */
+  readonly baseURL: string = BASE_URL
 
   constructor(options: ClientOptions = {}) {
+    // `baseURL` was an option in 0.1.0-beta.0. Refused rather than ignored: a
+    // caller still passing a staging or local URL would otherwise have its key
+    // start hitting production with no sign anything had changed.
+    if ("baseURL" in (options as Record<string, unknown>)) {
+      throw new DialgemError(
+        "`baseURL` is not an option: the SDK always talks to https://api.dialgem.com. Remove it.",
+      )
+    }
+
     if (isBrowser() && !options.dangerouslyAllowBrowser) {
       throw new DialgemError(
         "The Dialgem SDK is for server-side use: running it in a browser exposes your API key to every visitor. " +
@@ -78,11 +87,10 @@ export class Dialgem {
     assertMaxRetries(maxRetries)
 
     const fetchImpl = options.fetch ?? defaultFetch()
-    this.baseURL = (options.baseURL ?? readEnv("DIALGEM_BASE_URL") ?? DEFAULT_BASE_URL).replace(/\/+$/, "")
 
     const http = new HttpClient({
       apiKey,
-      baseURL: this.baseURL,
+      baseURL: BASE_URL,
       timeout,
       maxRetries,
       fetch: fetchImpl,

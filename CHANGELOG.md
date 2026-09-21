@@ -3,6 +3,7 @@
 ## 0.1.0-beta.1 (unreleased)
 
 ### Breaking changes
+- **The API address is fixed at `https://api.dialgem.com`.** The `baseURL` option and the `DIALGEM_BASE_URL` environment variable are gone. Passing `baseURL` now throws rather than being ignored, so a leftover staging or local URL cannot quietly send your key to production. `DEFAULT_BASE_URL` is renamed `BASE_URL`.
 - **Webhook signatures are timestamped.** `x-dialgem-signature` is now `v=<timestamp_ms>,d=<hex>`, where the HMAC covers the raw body plus the timestamp. `verify` and `constructEvent` also reject signatures more than 5 minutes old; set `toleranceMs` or `now` to change that. Signatures from 0.1.0-beta.0 no longer verify.
 - **Webhook payloads carry the full call record.** Every event is `{ event, call_id, agent_id, call }`. The flat fields (`status`, `duration_s`, `analysis`) now live under `call`.
 - **`calls.list` pages are cursor-based.** A page is `{ data, has_more, pagination_key }`. `page`, `page_size` and `total` are gone; use `limit`.
