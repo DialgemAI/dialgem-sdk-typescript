@@ -462,6 +462,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/voices/{voice_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Voice */
+        delete: operations["delete_voice_v1_voices__voice_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/voices/clone": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Clone Voice */
+        post: operations["clone_voice_v1_voices_clone_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -858,6 +892,27 @@ export interface components {
              * @default 1
              */
             weight?: number;
+        };
+        /** Body_clone_voice_v1_voices_clone_post */
+        Body_clone_voice_v1_voices_clone_post: {
+            /** Consent Confirmed */
+            consent_confirmed: boolean;
+            /** Description */
+            description?: string | null;
+            /**
+             * Engine
+             * @default elevenlabs
+             */
+            engine?: string;
+            /** Files */
+            files: string[];
+            /**
+             * Language
+             * @default en
+             */
+            language?: string;
+            /** Name */
+            name: string;
         };
         /** BranchNode */
         BranchNode: {
@@ -3366,6 +3421,74 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     }[];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_voice_v1_voices__voice_id__delete: {
+        parameters: {
+            query?: {
+                api_key?: string | null;
+            };
+            header?: never;
+            path: {
+                voice_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    clone_voice_v1_voices_clone_post: {
+        parameters: {
+            query?: {
+                api_key?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_clone_voice_v1_voices_clone_post"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             422: {

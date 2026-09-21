@@ -48,6 +48,8 @@ const PUBLIC_OPERATIONS = {
   "/v1/phone-numbers/{number_id}/assign": ["patch"],
   "/v1/phone-numbers/by-number/{number}": ["get"],
   "/v1/voices": ["get"],
+  "/v1/voices/clone": ["post"],
+  "/v1/voices/{voice_id}": ["delete"],
   "/v1/flow-templates": ["get"],
   "/v1/flow-templates/{template_id}": ["get"],
   "/v1/prompt-templates": ["get"],

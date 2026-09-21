@@ -14,7 +14,7 @@ describe("resource methods", () => {
     expect(calls).toHaveLength(1)
     expect(calls[0]!.method).toBe(call.method)
     expect(calls[0]!.url).toBe(`${BASE_URL}${call.path}`)
-    expect(calls[0]!.body).toEqual(call.body)
+    if (!call.skipBody) expect(calls[0]!.body).toEqual(call.body)
   })
 
   it("the table covers every public resource method", () => {
@@ -66,6 +66,84 @@ describe("resource methods", () => {
     const { fetch, calls } = mockFetch()
     await client(fetch).agents.versions.publish("ag_1")
     expect(calls[0]!.body).toEqual({})
+  })
+
+  it("uploads clone audio as multipart, with a filename on every part", async () => {
+    // The provider infers the audio container from the filename, so a part
+    // without one is a clone that fails at the provider for a reason the
+    // caller cannot see from here.
+    const { fetch, calls } = mockFetch(() => ({ body: { id: "v_1" } }))
+    await client(fetch).voices.clone({
+      name: "Ada",
+      files: [
+        new Blob([new Uint8Array([1])], { type: "audio/mpeg" }),
+        new Blob([new Uint8Array([2])], { type: "audio/wav" }),
+      ],
+      filenames: ["first.mp3"],
+      consent_confirmed: true,
+      engine: "cartesia",
+      description: "support",
+      language: "de",
+    })
+
+    const form = calls[0]!.body as FormData
+    expect(form).toBeInstanceOf(FormData)
+    expect(form.get("name")).toBe("Ada")
+    expect(form.get("consent_confirmed")).toBe("true")
+    expect(form.get("engine")).toBe("cartesia")
+    expect(form.get("description")).toBe("support")
+    expect(form.get("language")).toBe("de")
+    const parts = form.getAll("files") as File[]
+    expect(parts).toHaveLength(2)
+    expect(parts[0]!.name).toBe("first.mp3")
+    expect(parts[1]!.name).toBe("clip-2.wav")
+  })
+
+  it("does not set Content-Type on a multipart upload", async () => {
+    // Only fetch knows the boundary it is about to generate; setting the
+    // header ourselves produces a request no server can parse.
+    const { fetch, calls } = mockFetch(() => ({ body: { id: "v_1" } }))
+    await client(fetch).voices.clone({
+      name: "Ada",
+      files: [new Blob([new Uint8Array([1])])],
+      consent_confirmed: true,
+    })
+    const names = Object.keys(calls[0]!.headers).map((h) => h.toLowerCase())
+    expect(names).not.toContain("content-type")
+    expect(names).toContain("x-api-key")
+  })
+
+  it("never retries a multipart upload, even when asked to", async () => {
+    // A retried multipart body can send truncated audio, and a clone built
+    // from half a recording succeeds and sounds wrong.
+    const { fetch, calls } = mockFetch(() => ({ status: 503, body: { err_msg: "nope" } }))
+    await expect(
+      client(fetch).voices.clone(
+        { name: "Ada", files: [new Blob([new Uint8Array([1])])], consent_confirmed: true },
+        { maxRetries: 3 },
+      ),
+    ).rejects.toThrow()
+    expect(calls).toHaveLength(1)
+  })
+
+  it("refuses to upload audio without the consent assertion", async () => {
+    const { fetch, calls } = mockFetch()
+    expect(() =>
+      client(fetch).voices.clone({
+        name: "Ada",
+        files: [new Blob([new Uint8Array([1])])],
+        consent_confirmed: false as unknown as true,
+      }),
+    ).toThrow(DialgemError)
+    expect(calls).toHaveLength(0)
+  })
+
+  it("refuses a clone with no audio", async () => {
+    const { fetch, calls } = mockFetch()
+    expect(() =>
+      client(fetch).voices.clone({ name: "Ada", files: [], consent_confirmed: true }),
+    ).toThrow(DialgemError)
+    expect(calls).toHaveLength(0)
   })
 
   it("resolves 204 responses to undefined", async () => {
