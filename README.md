@@ -37,7 +37,6 @@ const agent = await dialgem.agents.create({
 | Option | Default | |
 |---|---|---|
 | `apiKey` | `process.env.DIALGEM_API_KEY` | Organization API key. |
-| `baseURL` | `process.env.DIALGEM_BASE_URL`, then `https://api.dialgem.com` | Point at a self-hosted or local stack. |
 | `timeout` | `60000` | Milliseconds per attempt. |
 | `maxRetries` | `2` | See [Retries](#retries). |
 | `fetch` | global `fetch` | Custom implementation (proxy agent, instrumentation). |
@@ -326,7 +325,7 @@ pnpm sync:openapi --from https://api.dialgem.com/openapi.json
 pnpm gen:types
 
 # Against a running API, with an organization key:
-DIALGEM_API_KEY=zk_… DIALGEM_BASE_URL=http://localhost:8002 pnpm test:live
+DIALGEM_API_KEY=zk_… pnpm test:live   # runs against api.dialgem.com — use a test org's key
 ```
 
 Request-body types are generated from `openapi/openapi.json`. Response types in `src/types/` are written by hand, so a change to a response shape needs a matching edit there.

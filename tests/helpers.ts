@@ -55,10 +55,10 @@ export function toResponse(reply: MockReply): FetchResponse {
   }
 }
 
-export const BASE_URL = "https://api.test.dialgem"
+export { BASE_URL } from "@dialgem/sdk"
 
 export function client(fetch: Fetch, options: ClientOptions = {}): Dialgem {
-  return new Dialgem({ apiKey: "zk_test", baseURL: BASE_URL, fetch, ...options })
+  return new Dialgem({ apiKey: "zk_test", fetch, ...options })
 }
 
 /** An error envelope in the exact shape the Dialgem API returns. */

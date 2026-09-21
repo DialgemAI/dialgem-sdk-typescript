@@ -1,4 +1,4 @@
-import { DEFAULT_BASE_URL, Dialgem, DialgemError, VERSION, webhooks } from "@dialgem/sdk"
+import { BASE_URL, Dialgem, DialgemError, VERSION, webhooks } from "@dialgem/sdk"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
 import { client, mockFetch } from "./helpers.js"
@@ -56,21 +56,34 @@ describe("Dialgem client", () => {
     expect(calls[0]!.redirect).toBe("manual")
   })
 
-  it("reads DIALGEM_API_KEY and DIALGEM_BASE_URL from the environment", async () => {
+  it("reads DIALGEM_API_KEY from the environment", async () => {
     vi.stubEnv("DIALGEM_API_KEY", "zk_env")
-    vi.stubEnv("DIALGEM_BASE_URL", "http://localhost:8002/")
     const { fetch, calls } = mockFetch(() => ({ body: [] }))
-    const c = new Dialgem({ fetch })
-    await c.agents.list()
-    expect(calls[0]!.url).toBe("http://localhost:8002/v1/agents")
+    await new Dialgem({ fetch }).agents.list()
     expect(calls[0]!.headers["X-API-Key"]).toBe("zk_env")
   })
 
-  it("defaults to the production API", () => {
-    vi.stubEnv("DIALGEM_BASE_URL", "")
-    const c = new Dialgem({ apiKey: "zk", fetch: mockFetch().fetch })
-    expect(c.baseURL).toBe(DEFAULT_BASE_URL)
-    expect(DEFAULT_BASE_URL).toBe("https://api.dialgem.com")
+  it("always talks to api.dialgem.com", async () => {
+    const { fetch, calls } = mockFetch(() => ({ body: [] }))
+    const c = new Dialgem({ apiKey: "zk", fetch })
+    await c.agents.list()
+    expect(BASE_URL).toBe("https://api.dialgem.com")
+    expect(c.baseURL).toBe(BASE_URL)
+    expect(calls[0]!.url).toBe("https://api.dialgem.com/v1/agents")
+  })
+
+  it("ignores a DIALGEM_BASE_URL left in the environment", async () => {
+    vi.stubEnv("DIALGEM_BASE_URL", "http://localhost:8002")
+    const { fetch, calls } = mockFetch(() => ({ body: [] }))
+    await new Dialgem({ apiKey: "zk", fetch }).agents.list()
+    expect(calls[0]!.url).toBe("https://api.dialgem.com/v1/agents")
+  })
+
+  it("refuses a baseURL option instead of silently ignoring it", () => {
+    // It was an option in 0.1.0-beta.0. Ignoring a leftover staging or local
+    // URL would send that caller's key to production with no sign of it.
+    const options = { apiKey: "zk", fetch: mockFetch().fetch, baseURL: "http://localhost:8002" }
+    expect(() => new Dialgem(options as never)).toThrow(/not an option/)
   })
 
   it("throws a clear error without an API key", () => {
@@ -96,7 +109,7 @@ describe("Dialgem client", () => {
   })
 
   it("accepts maxRetries: 0 and explicit undefined options", () => {
-    expect(() => client(mockFetch().fetch, { maxRetries: 0, timeout: undefined, baseURL: undefined })).not.toThrow()
+    expect(() => client(mockFetch().fetch, { maxRetries: 0, timeout: undefined })).not.toThrow()
   })
 
   it("refuses to run in a browser unless explicitly allowed", () => {
