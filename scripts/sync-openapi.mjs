@@ -46,6 +46,7 @@ const PUBLIC_OPERATIONS = {
   "/v1/phone-numbers": ["get", "post"],
   "/v1/phone-numbers/{number_id}": ["patch", "delete"],
   "/v1/phone-numbers/{number_id}/assign": ["patch"],
+  "/v1/phone-numbers/by-number/{number}": ["get"],
   "/v1/voices": ["get"],
   "/v1/flow-templates": ["get"],
   "/v1/flow-templates/{template_id}": ["get"],

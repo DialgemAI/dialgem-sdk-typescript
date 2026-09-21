@@ -2234,6 +2234,61 @@
         }
       }
     },
+    "/v1/phone-numbers/by-number/{number}": {
+      "get": {
+        "summary": "Get Phone Number By Number",
+        "operationId": "get_phone_number_by_number_v1_phone_numbers_by_number__number__get",
+        "parameters": [
+          {
+            "name": "number",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Number"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Phone Number By Number V1 Phone Numbers By Number  Number  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/voices": {
       "get": {
         "summary": "List Voices",
@@ -3913,7 +3968,15 @@
             "title": "Agent Id"
           },
           "agent_version": {
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string",
+                "const": "latest_published"
+              }
+            ],
             "title": "Agent Version",
             "default": 0
           },
@@ -6410,8 +6473,15 @@
             "title": "Agent Id"
           },
           "agent_version": {
-            "type": "integer",
-            "minimum": 0,
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string",
+                "const": "latest_published"
+              }
+            ],
             "title": "Agent Version",
             "default": 0
           },
@@ -6463,8 +6533,11 @@
           "agent_version": {
             "anyOf": [
               {
-                "type": "integer",
-                "minimum": 0
+                "type": "integer"
+              },
+              {
+                "type": "string",
+                "const": "latest_published"
               },
               {
                 "type": "null"
@@ -6528,8 +6601,15 @@
             "title": "Inbound Agent Id"
           },
           "inbound_agent_version": {
-            "type": "integer",
-            "minimum": 0,
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string",
+                "const": "latest_published"
+              }
+            ],
             "title": "Inbound Agent Version",
             "default": 0
           },
@@ -6545,10 +6625,45 @@
             "title": "Outbound Agent Id"
           },
           "outbound_agent_version": {
-            "type": "integer",
-            "minimum": 0,
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string",
+                "const": "latest_published"
+              }
+            ],
             "title": "Outbound Agent Version",
             "default": 0
+          },
+          "inbound_agents": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/AgentWeightIn"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inbound Agents"
+          },
+          "outbound_agents": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/AgentWeightIn"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outbound Agents"
           },
           "custom_sms_enabled": {
             "type": "boolean",
@@ -6650,8 +6765,11 @@
           "inbound_agent_version": {
             "anyOf": [
               {
-                "type": "integer",
-                "minimum": 0
+                "type": "integer"
+              },
+              {
+                "type": "string",
+                "const": "latest_published"
               },
               {
                 "type": "null"
@@ -6678,8 +6796,11 @@
           "outbound_agent_version": {
             "anyOf": [
               {
-                "type": "integer",
-                "minimum": 0
+                "type": "integer"
+              },
+              {
+                "type": "string",
+                "const": "latest_published"
               },
               {
                 "type": "null"
@@ -7147,8 +7268,15 @@
             "title": "Agent Id"
           },
           "agent_version": {
-            "type": "integer",
-            "minimum": 0,
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string",
+                "const": "latest_published"
+              }
+            ],
             "title": "Agent Version",
             "default": 0
           },

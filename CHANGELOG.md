@@ -14,6 +14,8 @@
 - `calls.list` filters: `agent_id`, `status` (one or several), `direction`, `call_type`, `disconnection_reason`, `from_number`, `to_number`, `user_sentiment`, `call_successful`, `start_after`, `start_before`, `metadata`, `sort_order`.
 - `webhooks.constructFunctionCall` verifies and parses signed requests to your custom functions (`{ name, call, args }`).
 - `AgentFunction.args_at_root`.
+- `phoneNumbers.retrieve(phoneNumber)` looks a number up by its E.164 value.
+- **`agent_version: "latest_published"`** on a phone number and on `createPhoneCall` / `register`: a pointer that follows the newest publish rather than naming a version. A call still reports the concrete version it ran.
 - **Agent versions.** `agents.versions.publish` freezes an agent — its configuration, functions and MCP servers — as an immutable numbered snapshot; `list` and `retrieve` read them back. Pin one with `inbound_agent_version` / `outbound_agent_version` on a phone number, or `agent_version` on `createPhoneCall` and `register`. The version a call ran is reported as `agent_version` on the call record and in every webhook. The agent itself is the draft, version 0, and stays what every unpinned call runs.
 
 ## 0.1.0-beta.0 (unreleased)

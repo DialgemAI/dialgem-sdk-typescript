@@ -15,6 +15,21 @@ export class PhoneNumbers extends APIResource {
   }
 
   /**
+   * One number by its E.164 value, e.g. `+14155550123`.
+   *
+   * Keyed on the number rather than on `id`, because the number is what you
+   * have when you are asking whether it is registered at all. Throws
+   * `NotFoundError` when it is not.
+   */
+  retrieve(phoneNumber: string, options?: RequestOptions): Promise<PhoneNumber> {
+    return this._client.get(
+      path`/v1/phone-numbers/by-number/${phoneNumber}`,
+      undefined,
+      options,
+    )
+  }
+
+  /**
    * Partial update.
    *
    * `inbound_agent_id` is **ignored unless `set_inbound_agent: true`** is sent with
