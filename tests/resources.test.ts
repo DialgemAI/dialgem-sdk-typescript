@@ -35,6 +35,39 @@ describe("resource methods", () => {
     expect(calls).toHaveLength(0)
   })
 
+  it("rejects a version that is not a published version number", async () => {
+    // 0 is the draft and is read through `agents.retrieve`; a fraction or a
+    // negative would reach the server as a 404 with nothing pointing back at
+    // the caller's own value.
+    const { fetch, calls } = mockFetch()
+    for (const bad of [0, -1, 1.5, Number.NaN]) {
+      expect(() => client(fetch).agents.versions.retrieve("ag_1", bad)).toThrow(DialgemError)
+    }
+    expect(calls).toHaveLength(0)
+  })
+
+  it("unwraps the versions envelope into an array", async () => {
+    const { fetch } = mockFetch(() => ({ body: { versions: [{ version: 2 }, { version: 1 }], has_more: true } }))
+    await expect(client(fetch).agents.versions.list("ag_1")).resolves.toEqual([
+      { version: 2 },
+      { version: 1 },
+    ])
+  })
+
+  it("keeps has_more on listPage, which is the point of having both", async () => {
+    const { fetch } = mockFetch(() => ({ body: { versions: [{ version: 2 }], has_more: true } }))
+    await expect(client(fetch).agents.versions.listPage("ag_1", { limit: 1 })).resolves.toEqual({
+      versions: [{ version: 2 }],
+      has_more: true,
+    })
+  })
+
+  it("publishes with no body at all", async () => {
+    const { fetch, calls } = mockFetch()
+    await client(fetch).agents.versions.publish("ag_1")
+    expect(calls[0]!.body).toEqual({})
+  })
+
   it("resolves 204 responses to undefined", async () => {
     const { fetch } = mockFetch(() => ({ status: 204 }))
     await expect(client(fetch).phoneNumbers.delete("pn_1")).resolves.toBeUndefined()

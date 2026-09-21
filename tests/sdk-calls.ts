@@ -37,6 +37,11 @@ export const SDK_CALLS: SdkCall[] = [
   { name: "agents.mcpServers.delete", invoke: (c) => c.agents.mcpServers.delete("ag_1", "srv_1"), method: "DELETE", path: "/v1/agents/ag_1/mcp-servers/srv_1" },
   { name: "agents.mcpServers.test", invoke: (c) => c.agents.mcpServers.test("ag_1", "srv_1"), method: "POST", path: "/v1/agents/ag_1/mcp-servers/srv_1/test" },
 
+  { name: "agents.versions.publish", invoke: (c) => c.agents.versions.publish("ag_1", { title: "v1" }), method: "POST", path: "/v1/agents/ag_1/versions", body: { title: "v1" } },
+  { name: "agents.versions.list", invoke: (c) => c.agents.versions.list("ag_1"), method: "GET", path: "/v1/agents/ag_1/versions" },
+  { name: "agents.versions.listPage", invoke: (c) => c.agents.versions.listPage("ag_1", { limit: 2, before_version: 5 }), method: "GET", path: "/v1/agents/ag_1/versions?limit=2&before_version=5" },
+  { name: "agents.versions.retrieve", invoke: (c) => c.agents.versions.retrieve("ag_1", 2), method: "GET", path: "/v1/agents/ag_1/versions/2" },
+
   { name: "calls.list", invoke: (c) => c.calls.list(), method: "GET", path: "/v1/calls?limit=10" },
   { name: "calls.retrieve", invoke: (c) => c.calls.retrieve("call_1"), method: "GET", path: "/v1/calls/call_1" },
   { name: "calls.update", invoke: (c) => c.calls.update("call_1", { metadata: { crm_id: "42" } }), method: "PATCH", path: "/v1/calls/call_1", body: { metadata: { crm_id: "42" } } },

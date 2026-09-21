@@ -6,6 +6,12 @@ export interface Call {
   id: string
   /** Empty string when the call has no agent. */
   agent_id: string
+  /**
+   * The published agent version this call ran. 0 is the live draft, which is
+   * what a call runs unless a number or the request that created it pinned a
+   * version.
+   */
+  agent_version: number
   agent_name: string
   /** Dialgem's lifecycle state. */
   status: CallStatus

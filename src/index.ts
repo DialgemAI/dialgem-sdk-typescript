@@ -35,7 +35,7 @@ export {
   type WebhookPayload,
 } from "./webhooks.js"
 
-export type { Agents, AgentFunctions, AgentKnowledge, AgentMCPServers } from "./resources/agents.js"
+export type { Agents, AgentFunctions, AgentKnowledge, AgentMCPServers, AgentVersions } from "./resources/agents.js"
 export type { Calls } from "./resources/calls.js"
 export type { PhoneNumbers } from "./resources/phone-numbers.js"
 export type { FlowTemplates, PromptTemplates, Voices } from "./resources/catalog.js"
@@ -43,6 +43,7 @@ export type { FlowTemplates, PromptTemplates, Voices } from "./resources/catalog
 export type * from "./types/params.js"
 export type * from "./types/agent.js"
 export type * from "./types/agent-resources.js"
+export type * from "./types/agent-version.js"
 export type * from "./types/call.js"
 export type * from "./types/phone-number.js"
 export type * from "./types/catalog.js"
