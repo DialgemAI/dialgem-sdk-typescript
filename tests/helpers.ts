@@ -27,7 +27,14 @@ export function mockFetch(responder: Responder = () => ({ status: 200, body: {} 
       url,
       method: init.method,
       headers: init.headers,
-      body: init.body === undefined ? undefined : JSON.parse(init.body),
+      // A multipart upload is recorded as the FormData itself, so a test can
+      // assert on its parts. Only a JSON body is parsed.
+      body:
+        init.body === undefined
+          ? undefined
+          : typeof init.body === "string"
+            ? JSON.parse(init.body)
+            : init.body,
       signal: init.signal,
       redirect: init.redirect,
     }

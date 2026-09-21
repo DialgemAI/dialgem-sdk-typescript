@@ -12,6 +12,8 @@ export interface SdkCall {
   method: "GET" | "POST" | "PATCH" | "DELETE"
   path: string
   body?: unknown
+  /** Set for a multipart upload, whose body is not a comparable JSON value. */
+  skipBody?: boolean
 }
 
 export const SDK_CALLS: SdkCall[] = [
@@ -64,6 +66,20 @@ export const SDK_CALLS: SdkCall[] = [
   { name: "phoneNumbers.delete", invoke: (c) => c.phoneNumbers.delete("pn_1"), method: "DELETE", path: "/v1/phone-numbers/pn_1" },
 
   { name: "voices.list", invoke: (c) => c.voices.list({ language: "en" }), method: "GET", path: "/v1/voices?language=en" },
+  {
+    name: "voices.clone",
+    invoke: (c) =>
+      c.voices.clone({
+        name: "Ada",
+        files: [new Blob([new Uint8Array([1, 2, 3])], { type: "audio/mpeg" })],
+        consent_confirmed: true,
+      }),
+    method: "POST",
+    path: "/v1/voices/clone",
+    // A FormData body: asserted part by part in resources.test.ts instead.
+    skipBody: true,
+  },
+  { name: "voices.delete", invoke: (c) => c.voices.delete("v_1"), method: "DELETE", path: "/v1/voices/v_1" },
   { name: "flowTemplates.list", invoke: (c) => c.flowTemplates.list(), method: "GET", path: "/v1/flow-templates" },
   { name: "flowTemplates.retrieve", invoke: (c) => c.flowTemplates.retrieve("tpl_1"), method: "GET", path: "/v1/flow-templates/tpl_1" },
   { name: "promptTemplates.list", invoke: (c) => c.promptTemplates.list({ category: "sales" }), method: "GET", path: "/v1/prompt-templates?category=sales" },

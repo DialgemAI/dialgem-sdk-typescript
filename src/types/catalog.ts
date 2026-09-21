@@ -16,8 +16,50 @@ export interface Voice {
   language: string[]
   preview_url: string | null
   raw_metadata: Record<string, unknown> | null
+  /** True for a voice your organization cloned; false for the shared catalog. */
+  is_custom: boolean
+  /** Who uploaded the audio, for a cloned voice. */
+  created_by: string | null
   created_at: string | null
   updated_at: string | null
+}
+
+/** One audio sample for cloning. `Blob` and `File` both satisfy this. */
+export type VoiceCloneFile = Blob | { name?: string; type?: string }
+
+export interface VoiceCloneParams {
+  /** Display name for the new voice. */
+  name: string
+  /**
+   * The audio to clone from.
+   *
+   * ElevenLabs takes up to 25 files; **Cartesia takes exactly one** and refuses
+   * more rather than silently picking one, since that would make the same
+   * upload produce a noticeably different voice on the two providers.
+   */
+  files: Blob[]
+  /**
+   * You are asserting that you hold the rights to this audio and have the
+   * speaker's consent to clone their voice. Required, and recorded against
+   * your API identity — a cloned voice is built from a real person's speech.
+   */
+  consent_confirmed: true
+  /** Which provider clones it. Defaults to `elevenlabs`. */
+  engine?: "elevenlabs" | "cartesia" | undefined
+  description?: string | undefined
+  /** Cartesia clones per language; ElevenLabs ignores this. Defaults to `en`. */
+  language?: string | undefined
+  /**
+   * Filenames sent with each blob, in order. The provider infers the audio
+   * container from the extension, so a `Blob` with no name needs one here.
+   * Defaults to `clip-1.wav`, `clip-2.wav`, …
+   */
+  filenames?: string[] | undefined
+}
+
+export interface VoiceDeleteResponse {
+  deleted: boolean
+  voice_id: string
 }
 
 export interface VoiceListParams {

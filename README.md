@@ -232,6 +232,30 @@ await dialgem.phoneNumbers.assign(number.id, {
 
 A version is also pinnable per call — `createPhoneCall({ …, agent_id, agent_version: 1 })` and `register({ …, agent_version: 1 })` — and the version a call ran comes back on the call record as `agent_version`, so a recording, its transcript and its analysis all name the configuration that produced them. Version `0` everywhere means the draft, which is what an unpinned call runs.
 
+### 7. Give an agent a cloned voice
+
+```ts
+import { readFile } from "node:fs/promises"
+
+const voice = await dialgem.voices.clone({
+  name: "Ada",
+  files: [new Blob([await readFile("./sample.mp3")], { type: "audio/mpeg" })],
+  // You are asserting that you hold the rights to this audio and have the
+  // speaker's consent. It is recorded against your API identity.
+  consent_confirmed: true,
+})
+
+await dialgem.agents.update(agent.id, { voice_id: voice.provider_voice_id })
+```
+
+The new voice is private to your organization — it never appears in another
+one's catalog, and `voices.list()` puts yours first. ElevenLabs (the default)
+takes up to 25 files; **Cartesia takes exactly one** and refuses more rather
+than quietly picking one.
+
+`voices.delete(voice.id)` removes it at the provider and here. It refuses with a
+409 while an agent still uses it, rather than leaving that agent without a voice.
+
 ## Errors
 
 Every error extends `DialgemError`. When the API returns an HTTP error, the SDK throws an `APIError` subclass chosen by status code:
@@ -282,7 +306,7 @@ The SDK never follows redirects. The API does not issue them, and following one 
 | `agents.versions` | `publish`, `list`, `listPage`, `retrieve` |
 | `calls` | `list`, `retrieve`, `update`, `delete`, `stop`, `createPhoneCall`, `register` |
 | `phoneNumbers` | `create`, `list`, `retrieve`, `update`, `assign`, `delete` |
-| `voices` | `list` |
+| `voices` | `list`, `clone`, `delete` |
 | `flowTemplates`, `promptTemplates` | `list`, `retrieve` |
 | `webhooks` | `verify`, `constructEvent`, `constructFunctionCall` |
 

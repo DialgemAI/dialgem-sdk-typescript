@@ -18,7 +18,12 @@ export type Fetch = (url: string, init: FetchInit) => Promise<FetchResponse>
 export interface FetchInit {
   method: string
   headers: Record<string, string>
-  body?: string
+  /**
+   * A JSON string, or a `FormData` for a file upload — in which case
+   * `Content-Type` is deliberately absent, since only `fetch` knows the
+   * multipart boundary it is about to generate.
+   */
+  body?: string | FormData
   signal: AbortSignal
   /**
    * Always `"manual"`. A followed redirect re-sends the API key to wherever the
@@ -100,6 +105,17 @@ export class HttpClient {
     return this.request<T>("POST", path, { body, options })
   }
 
+  /**
+   * POST a `FormData` body — file uploads.
+   *
+   * The body is sent as-is and `Content-Type` is left unset, because only
+   * `fetch` knows the multipart boundary it is about to generate. Setting the
+   * header ourselves produces a request no server can parse.
+   */
+  postForm<T>(path: string, form: FormData, options?: RequestOptions): Promise<T> {
+    return this.request<T>("POST", path, { body: form, options })
+  }
+
   patch<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T> {
     return this.request<T>("PATCH", path, { body, options })
   }
@@ -114,10 +130,17 @@ export class HttpClient {
     { query, body, options = {} }: { query?: Query | undefined; body?: unknown; options?: RequestOptions | undefined },
   ): Promise<T> {
     const url = this.buildURL(path, query)
-    const headers = this.buildHeaders(body !== undefined, options.headers)
-    const payload = body === undefined ? undefined : JSON.stringify(body)
+    const isForm = isFormData(body)
+    const headers = this.buildHeaders(body !== undefined && !isForm, options.headers)
+    const payload = body === undefined ? undefined : isForm ? (body as FormData) : JSON.stringify(body)
     const timeout = options.timeout ?? this.#timeout
-    const maxRetries = options.maxRetries ?? (RETRYABLE_METHODS.has(method) ? this.#maxRetries : 0)
+    // A multipart body is never retried, even on request. Its parts may be
+    // one-shot streams, so a second attempt can send a truncated upload — and
+    // the one thing worse than a failed clone is a clone built from half the
+    // audio, which succeeds and sounds wrong.
+    const maxRetries = isForm
+      ? 0
+      : options.maxRetries ?? (RETRYABLE_METHODS.has(method) ? this.#maxRetries : 0)
     assertTimeout(timeout)
     assertMaxRetries(maxRetries)
 
@@ -151,7 +174,7 @@ export class HttpClient {
     url: string,
     method: Method,
     headers: Record<string, string>,
-    payload: string | undefined,
+    payload: string | FormData | undefined,
     timeout: number,
     signal: AbortSignal | undefined,
   ): Promise<
@@ -218,6 +241,11 @@ export class HttpClient {
     if (hasBody) layer({ "Content-Type": "application/json" })
     return Object.fromEntries(merged.values())
   }
+}
+
+/** `FormData` without assuming it exists — it does on every supported runtime. */
+function isFormData(value: unknown): value is FormData {
+  return typeof FormData !== "undefined" && value instanceof FormData
 }
 
 export function assertTimeout(value: number): void {
