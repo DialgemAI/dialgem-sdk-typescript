@@ -221,6 +221,15 @@ await dialgem.agents.versions.retrieve(agent.id, 1) // with its snapshot
 const { versions, has_more } = await dialgem.agents.versions.listPage(agent.id, { limit: 20 })
 ```
 
+A number can also follow the newest publish instead of naming a version, so shipping moves it with nothing to update:
+
+```ts
+await dialgem.phoneNumbers.assign(number.id, {
+  agent_id: agent.id,
+  agent_version: "latest_published",
+})
+```
+
 A version is also pinnable per call — `createPhoneCall({ …, agent_id, agent_version: 1 })` and `register({ …, agent_version: 1 })` — and the version a call ran comes back on the call record as `agent_version`, so a recording, its transcript and its analysis all name the configuration that produced them. Version `0` everywhere means the draft, which is what an unpinned call runs.
 
 ## Errors
@@ -272,7 +281,7 @@ The SDK never follows redirects. The API does not issue them, and following one 
 | `agents.mcpServers` | `list`, `create`, `update`, `delete`, `test` |
 | `agents.versions` | `publish`, `list`, `listPage`, `retrieve` |
 | `calls` | `list`, `retrieve`, `update`, `delete`, `stop`, `createPhoneCall`, `register` |
-| `phoneNumbers` | `create`, `list`, `update`, `assign`, `delete` |
+| `phoneNumbers` | `create`, `list`, `retrieve`, `update`, `assign`, `delete` |
 | `voices` | `list` |
 | `flowTemplates`, `promptTemplates` | `list`, `retrieve` |
 | `webhooks` | `verify`, `constructEvent`, `constructFunctionCall` |

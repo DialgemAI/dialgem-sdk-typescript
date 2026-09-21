@@ -58,6 +58,7 @@ export const SDK_CALLS: SdkCall[] = [
 
   { name: "phoneNumbers.create", invoke: (c) => c.phoneNumbers.create({ phone_number: "+14155550100" }), method: "POST", path: "/v1/phone-numbers", body: { phone_number: "+14155550100" } },
   { name: "phoneNumbers.list", invoke: (c) => c.phoneNumbers.list(), method: "GET", path: "/v1/phone-numbers" },
+  { name: "phoneNumbers.retrieve", invoke: (c) => c.phoneNumbers.retrieve("+14155550100"), method: "GET", path: "/v1/phone-numbers/by-number/%2B14155550100" },
   { name: "phoneNumbers.update", invoke: (c) => c.phoneNumbers.update("pn_1", { nickname: "Main" }), method: "PATCH", path: "/v1/phone-numbers/pn_1", body: { nickname: "Main" } },
   { name: "phoneNumbers.assign", invoke: (c) => c.phoneNumbers.assign("pn_1", { agent_id: "ag_1" }), method: "PATCH", path: "/v1/phone-numbers/pn_1/assign", body: { agent_id: "ag_1" } },
   { name: "phoneNumbers.delete", invoke: (c) => c.phoneNumbers.delete("pn_1"), method: "DELETE", path: "/v1/phone-numbers/pn_1" },

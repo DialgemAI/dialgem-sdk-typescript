@@ -394,6 +394,23 @@ export interface paths {
         patch: operations["assign_phone_number_v1_phone_numbers__number_id__assign_patch"];
         trace?: never;
     };
+    "/v1/phone-numbers/by-number/{number}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Phone Number By Number */
+        get: operations["get_phone_number_by_number_v1_phone_numbers_by_number__number__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/prompt-templates": {
         parameters: {
             query?: never;
@@ -835,7 +852,7 @@ export interface components {
              * Agent Version
              * @default 0
              */
-            agent_version?: number;
+            agent_version?: number | "latest_published";
             /**
              * Weight
              * @default 1
@@ -1516,7 +1533,7 @@ export interface components {
              * Agent Version
              * @default 0
              */
-            agent_version?: number;
+            agent_version?: number | "latest_published";
             /** Dialgem Llm Dynamic Variables */
             dialgem_llm_dynamic_variables?: {
                 [key: string]: unknown;
@@ -1535,7 +1552,7 @@ export interface components {
             /** Agent Id */
             agent_id?: string | null;
             /** Agent Version */
-            agent_version?: number | null;
+            agent_version?: number | "latest_published" | null;
         };
         /** PhoneNumberCreate */
         PhoneNumberCreate: {
@@ -1555,7 +1572,9 @@ export interface components {
              * Inbound Agent Version
              * @default 0
              */
-            inbound_agent_version?: number;
+            inbound_agent_version?: number | "latest_published";
+            /** Inbound Agents */
+            inbound_agents?: components["schemas"]["AgentWeightIn"][] | null;
             /** Nickname */
             nickname?: string | null;
             /** Number */
@@ -1566,7 +1585,9 @@ export interface components {
              * Outbound Agent Version
              * @default 0
              */
-            outbound_agent_version?: number;
+            outbound_agent_version?: number | "latest_published";
+            /** Outbound Agents */
+            outbound_agents?: components["schemas"]["AgentWeightIn"][] | null;
             /** Phone Number */
             phone_number?: string | null;
             /**
@@ -1592,7 +1613,7 @@ export interface components {
             /** Inbound Agent Id */
             inbound_agent_id?: string | null;
             /** Inbound Agent Version */
-            inbound_agent_version?: number | null;
+            inbound_agent_version?: number | "latest_published" | null;
             /** Inbound Agents */
             inbound_agents?: components["schemas"]["AgentWeightIn"][] | null;
             /** Nickname */
@@ -1600,7 +1621,7 @@ export interface components {
             /** Outbound Agent Id */
             outbound_agent_id?: string | null;
             /** Outbound Agent Version */
-            outbound_agent_version?: number | null;
+            outbound_agent_version?: number | "latest_published" | null;
             /** Outbound Agents */
             outbound_agents?: components["schemas"]["AgentWeightIn"][] | null;
             /** Phone Number Type */
@@ -1783,7 +1804,7 @@ export interface components {
              * Agent Version
              * @default 0
              */
-            agent_version?: number;
+            agent_version?: number | "latest_published";
             /** Call Sid */
             call_sid?: string | null;
             /** Dialgem Llm Dynamic Variables */
@@ -3206,6 +3227,39 @@ export interface operations {
                 "application/json": components["schemas"]["PhoneNumberAssign"];
             };
         };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_phone_number_by_number_v1_phone_numbers_by_number__number__get: {
+        parameters: {
+            query?: {
+                api_key?: string | null;
+            };
+            header?: never;
+            path: {
+                number: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             200: {
                 headers: {
