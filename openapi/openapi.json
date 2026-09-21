@@ -1067,6 +1067,217 @@
         }
       }
     },
+    "/v1/agents/{agent_id}/versions": {
+      "get": {
+        "summary": "List Agent Versions",
+        "operationId": "list_agent_versions_v1_agents__agent_id__versions_get",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "before_version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Before Version"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response List Agent Versions V1 Agents  Agent Id  Versions Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Publish Agent Version",
+        "operationId": "publish_agent_version_v1_agents__agent_id__versions_post",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentVersionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Publish Agent Version V1 Agents  Agent Id  Versions Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/{agent_id}/versions/{version}": {
+      "get": {
+        "summary": "Get Agent Version",
+        "operationId": "get_agent_version_v1_agents__agent_id__versions__version__get",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Version"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Agent Version V1 Agents  Agent Id  Versions  Version  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/calls": {
       "get": {
         "summary": "List Calls",
@@ -2528,6 +2739,35 @@
             "title": "Reminder Message",
             "default": ""
           },
+          "reminder_max_count": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100,
+                "minimum": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reminder Max Count"
+          },
+          "pronunciation_dictionary": {
+            "items": {
+              "$ref": "#/components/schemas/PronunciationEntry"
+            },
+            "type": "array",
+            "maxItems": 200,
+            "title": "Pronunciation Dictionary"
+          },
+          "allow_user_dtmf": {
+            "type": "boolean",
+            "title": "Allow User Dtmf",
+            "default": false
+          },
+          "user_dtmf_options": {
+            "$ref": "#/components/schemas/UserDtmfOptions"
+          },
           "ambient_sound": {
             "type": "string",
             "enum": [
@@ -2720,6 +2960,30 @@
               }
             ],
             "title": "Data Retention Days"
+          },
+          "data_storage_setting": {
+            "type": "string",
+            "enum": [
+              "everything",
+              "everything_except_pii",
+              "basic_attributes_only"
+            ],
+            "title": "Data Storage Setting",
+            "default": "everything"
+          },
+          "pii_categories": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "email",
+                "credit_card",
+                "ssn",
+                "phone_number"
+              ]
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Pii Categories"
           },
           "webhook_url": {
             "anyOf": [
@@ -3159,6 +3423,55 @@
             ],
             "title": "Reminder Message"
           },
+          "reminder_max_count": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100,
+                "minimum": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reminder Max Count"
+          },
+          "pronunciation_dictionary": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PronunciationEntry"
+                },
+                "type": "array",
+                "maxItems": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pronunciation Dictionary"
+          },
+          "allow_user_dtmf": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Allow User Dtmf"
+          },
+          "user_dtmf_options": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UserDtmfOptions"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "ambient_sound": {
             "anyOf": [
               {
@@ -3481,6 +3794,43 @@
             ],
             "title": "Data Retention Days"
           },
+          "data_storage_setting": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "everything",
+                  "everything_except_pii",
+                  "basic_attributes_only"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Storage Setting"
+          },
+          "pii_categories": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "email",
+                    "credit_card",
+                    "ssn",
+                    "phone_number"
+                  ]
+                },
+                "type": "array",
+                "minItems": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pii Categories"
+          },
           "webhook_url": {
             "anyOf": [
               {
@@ -3525,6 +3875,36 @@
         },
         "type": "object",
         "title": "AgentUpdate"
+      },
+      "AgentVersionCreate": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "title": "AgentVersionCreate"
       },
       "AgentWeightIn": {
         "properties": {
@@ -6029,6 +6409,12 @@
             ],
             "title": "Agent Id"
           },
+          "agent_version": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Agent Version",
+            "default": 0
+          },
           "dialgem_llm_dynamic_variables": {
             "anyOf": [
               {
@@ -6073,6 +6459,18 @@
               }
             ],
             "title": "Agent Id"
+          },
+          "agent_version": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Version"
           }
         },
         "type": "object",
@@ -6129,6 +6527,12 @@
             ],
             "title": "Inbound Agent Id"
           },
+          "inbound_agent_version": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Inbound Agent Version",
+            "default": 0
+          },
           "outbound_agent_id": {
             "anyOf": [
               {
@@ -6139,6 +6543,12 @@
               }
             ],
             "title": "Outbound Agent Id"
+          },
+          "outbound_agent_version": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Outbound Agent Version",
+            "default": 0
           },
           "custom_sms_enabled": {
             "type": "boolean",
@@ -6237,6 +6647,18 @@
             ],
             "title": "Inbound Agent Id"
           },
+          "inbound_agent_version": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inbound Agent Version"
+          },
           "set_inbound_agent": {
             "type": "boolean",
             "title": "Set Inbound Agent",
@@ -6252,6 +6674,18 @@
               }
             ],
             "title": "Outbound Agent Id"
+          },
+          "outbound_agent_version": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outbound Agent Version"
           },
           "set_outbound_agent": {
             "type": "boolean",
@@ -6334,6 +6768,19 @@
               }
             ],
             "title": "Choices"
+          },
+          "required": {
+            "type": "boolean",
+            "title": "Required",
+            "default": false
+          },
+          "examples": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "title": "Examples"
           }
         },
         "type": "object",
@@ -6666,11 +7113,44 @@
         ],
         "title": "PromptTemplateSummary"
       },
+      "PronunciationEntry": {
+        "properties": {
+          "word": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Word"
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Alias"
+          },
+          "case_sensitive": {
+            "type": "boolean",
+            "title": "Case Sensitive",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "word",
+          "alias"
+        ],
+        "title": "PronunciationEntry"
+      },
       "RegisterCallRequest": {
         "properties": {
           "agent_id": {
             "type": "string",
             "title": "Agent Id"
+          },
+          "agent_version": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Agent Version",
+            "default": 0
           },
           "from_number": {
             "anyOf": [
@@ -7522,6 +8002,47 @@
         "additionalProperties": true,
         "type": "object",
         "title": "TransferOption"
+      },
+      "UserDtmfOptions": {
+        "properties": {
+          "digit_limit": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 50,
+                "minimum": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Digit Limit"
+          },
+          "termination_key": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "#",
+                  "*"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Termination Key"
+          },
+          "timeout_ms": {
+            "type": "integer",
+            "maximum": 15000,
+            "minimum": 500,
+            "title": "Timeout Ms",
+            "default": 2500
+          }
+        },
+        "type": "object",
+        "title": "UserDtmfOptions"
       },
       "ValidationError": {
         "properties": {

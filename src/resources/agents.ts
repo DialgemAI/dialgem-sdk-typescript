@@ -2,6 +2,13 @@ import type { HttpClient, RequestOptions } from "../core/http.js"
 import type { Agent, AgentDeleteResponse } from "../types/agent.js"
 import type { AgentFunction, KnowledgeDocument, MCPServer, MCPServerTestResult } from "../types/agent-resources.js"
 import type {
+  AgentVersion,
+  AgentVersionListParams,
+  AgentVersionListResponse,
+  AgentVersionPublishParams,
+  AgentVersionSummary,
+} from "../types/agent-version.js"
+import type {
   AgentCreateParams,
   AgentUpdateParams,
   FunctionCreateParams,
@@ -11,6 +18,7 @@ import type {
   MCPServerCreateParams,
   MCPServerUpdateParams,
 } from "../types/params.js"
+import { DialgemError } from "../core/errors.js"
 import { APIResource, path } from "./resource.js"
 
 export class Agents extends APIResource {
@@ -20,12 +28,15 @@ export class Agents extends APIResource {
   readonly knowledge: AgentKnowledge
   /** Remote MCP servers whose tools are exposed to the agent. */
   readonly mcpServers: AgentMCPServers
+  /** Frozen snapshots of the agent that a number or a call can pin. */
+  readonly versions: AgentVersions
 
   constructor(client: HttpClient) {
     super(client)
     this.functions = new AgentFunctions(client)
     this.knowledge = new AgentKnowledge(client)
     this.mcpServers = new AgentMCPServers(client)
+    this.versions = new AgentVersions(client)
   }
 
   /** Create an agent. Only `name` is required; everything else has a server default. */
@@ -50,6 +61,80 @@ export class Agents extends APIResource {
   delete(agentId: string, options?: RequestOptions): Promise<AgentDeleteResponse> {
     return this._client.delete(path`/v1/agents/${agentId}`, options)
   }
+}
+
+/**
+ * Published versions of an agent.
+ *
+ * The agent itself is the draft, version 0, and every call runs it unless a
+ * number or a request pins a published version. Publishing takes a copy;
+ * editing the agent afterwards changes only the draft.
+ */
+export class AgentVersions extends APIResource {
+  /** Freeze the agent as it is now. Returns the new version, snapshot included. */
+  publish(
+    agentId: string,
+    body: AgentVersionPublishParams = {},
+    options?: RequestOptions,
+  ): Promise<AgentVersion> {
+    return this._client.post(path`/v1/agents/${agentId}/versions`, body, options)
+  }
+
+/**
+   * One page of published versions, newest first, without their snapshots.
+   *
+   * Returns the array. When you need to page — an agent published on every
+   * deploy accumulates versions, and nothing prunes them — read `has_more` from
+   * {@link listPage} instead and pass the last `version` as `before_version`.
+   */
+  async list(
+    agentId: string,
+    params?: AgentVersionListParams,
+    options?: RequestOptions,
+  ): Promise<AgentVersionSummary[]> {
+    return (await this.listPage(agentId, params, options)).versions
+  }
+
+  /** {@link list} with the `has_more` flag, for paging. */
+  listPage(
+    agentId: string,
+    params?: AgentVersionListParams,
+    options?: RequestOptions,
+  ): Promise<AgentVersionListResponse> {
+    return this._client.get(
+      path`/v1/agents/${agentId}/versions`,
+      // Spread into a plain query record: an `interface` has no index
+      // signature, so it does not structurally satisfy `Query`.
+      { ...params },
+      options,
+    )
+  }
+
+  /** One version with its full snapshot. Version 0 is the draft: use `agents.retrieve`. */
+  retrieve(agentId: string, version: number, options?: RequestOptions): Promise<AgentVersion> {
+    return this._client.get(
+      path`/v1/agents/${agentId}/versions/${versionSegment(version)}`,
+      undefined,
+      options,
+    )
+  }
+}
+
+/**
+ * A version number as a path segment.
+ *
+ * Rejected here rather than sent: a fractional or negative number would 404 or
+ * 422 from the server with nothing pointing at the caller's own value, and
+ * `undefined` reaching the template would request the whole collection.
+ */
+function versionSegment(version: number): string {
+  if (!Number.isInteger(version) || version < 1) {
+    throw new DialgemError(
+      `Expected a published version number (a positive integer), got ${JSON.stringify(version)}. ` +
+        "Version 0 is the draft — read it with agents.retrieve().",
+    )
+  }
+  return String(version)
 }
 
 export class AgentFunctions extends APIResource {

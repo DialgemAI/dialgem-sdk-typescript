@@ -202,6 +202,27 @@ if (page.hasNextPage()) await page.getNextPage()
 
 Filters: `agent_id`, `status`, `direction`, `call_type`, `disconnection_reason`, `from_number`, `to_number`, `user_sentiment`, `call_successful`, `start_after` / `start_before` (epoch ms), `metadata`, `search` and `sort_order`. Pages are cursor-based, so walking them is stable while new calls arrive.
 
+### 6. Ship a change without touching live calls
+
+The agent you edit is the **draft**. Publishing freezes it — configuration, functions and MCP servers — as a numbered version that never changes afterwards:
+
+```ts
+const v1 = await dialgem.agents.versions.publish(agent.id, { title: "Refund flow" })
+v1.version // 1
+
+// Point production at the frozen copy, then keep editing the draft freely.
+await dialgem.phoneNumbers.assign(number.id, { agent_id: agent.id, agent_version: v1.version })
+await dialgem.agents.update(agent.id, { system_prompt: "…work in progress…" })
+
+await dialgem.agents.versions.list(agent.id) // one page, newest first
+await dialgem.agents.versions.retrieve(agent.id, 1) // with its snapshot
+
+// Nothing prunes versions, so the list is paged. `listPage` keeps `has_more`.
+const { versions, has_more } = await dialgem.agents.versions.listPage(agent.id, { limit: 20 })
+```
+
+A version is also pinnable per call — `createPhoneCall({ …, agent_id, agent_version: 1 })` and `register({ …, agent_version: 1 })` — and the version a call ran comes back on the call record as `agent_version`, so a recording, its transcript and its analysis all name the configuration that produced them. Version `0` everywhere means the draft, which is what an unpinned call runs.
+
 ## Errors
 
 Every error extends `DialgemError`. When the API returns an HTTP error, the SDK throws an `APIError` subclass chosen by status code:
@@ -249,6 +270,7 @@ The SDK never follows redirects. The API does not issue them, and following one 
 | `agents.functions` | `list`, `create`, `update`, `delete`, `reorder` |
 | `agents.knowledge` | `list`, `create`, `delete` |
 | `agents.mcpServers` | `list`, `create`, `update`, `delete`, `test` |
+| `agents.versions` | `publish`, `list`, `listPage`, `retrieve` |
 | `calls` | `list`, `retrieve`, `update`, `delete`, `stop`, `createPhoneCall`, `register` |
 | `phoneNumbers` | `create`, `list`, `update`, `assign`, `delete` |
 | `voices` | `list` |

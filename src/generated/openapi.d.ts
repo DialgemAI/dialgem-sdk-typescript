@@ -185,6 +185,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/agents/{agent_id}/versions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Agent Versions */
+        get: operations["list_agent_versions_v1_agents__agent_id__versions_get"];
+        put?: never;
+        /** Publish Agent Version */
+        post: operations["publish_agent_version_v1_agents__agent_id__versions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/agents/{agent_id}/versions/{version}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Agent Version */
+        get: operations["get_agent_version_v1_agents__agent_id__versions__version__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/calls": {
         parameters: {
             query?: never;
@@ -423,6 +458,11 @@ export interface components {
              */
             agent_type?: "llm" | "multi_prompt" | "flow";
             /**
+             * Allow User Dtmf
+             * @default false
+             */
+            allow_user_dtmf?: boolean;
+            /**
              * Ambient Sound
              * @default none
              * @enum {string}
@@ -447,6 +487,12 @@ export interface components {
             boosted_keywords?: string[];
             /** Data Retention Days */
             data_retention_days?: number | null;
+            /**
+             * Data Storage Setting
+             * @default everything
+             * @enum {string}
+             */
+            data_storage_setting?: "everything" | "everything_except_pii" | "basic_attributes_only";
             /** Default Dynamic Variables */
             default_dynamic_variables?: {
                 [key: string]: string;
@@ -520,6 +566,8 @@ export interface components {
              * @default false
              */
             opt_out_transcript_storage?: boolean;
+            /** Pii Categories */
+            pii_categories?: ("email" | "credit_card" | "ssn" | "phone_number")[];
             /**
              * Pii Redaction Enabled
              * @default false
@@ -532,6 +580,10 @@ export interface components {
              * @default claude-sonnet-4-6
              */
             post_call_analysis_model?: string;
+            /** Pronunciation Dictionary */
+            pronunciation_dictionary?: components["schemas"]["PronunciationEntry"][];
+            /** Reminder Max Count */
+            reminder_max_count?: number | null;
             /**
              * Reminder Message
              * @default
@@ -576,6 +628,7 @@ export interface components {
              * @default cartesia
              */
             tts_engine?: string;
+            user_dtmf_options?: components["schemas"]["UserDtmfOptions"];
             /**
              * Voice Id
              * @default
@@ -660,6 +713,8 @@ export interface components {
         AgentUpdate: {
             /** Agent Type */
             agent_type?: ("llm" | "multi_prompt" | "flow") | null;
+            /** Allow User Dtmf */
+            allow_user_dtmf?: boolean | null;
             /** Ambient Sound */
             ambient_sound?: ("none" | "coffee-shop" | "call-center" | "convention-hall" | "summer-outdoor" | "mountain-outdoor" | "static-noise") | null;
             /** Ambient Sound Volume */
@@ -672,6 +727,8 @@ export interface components {
             boosted_keywords?: string[] | null;
             /** Data Retention Days */
             data_retention_days?: number | null;
+            /** Data Storage Setting */
+            data_storage_setting?: ("everything" | "everything_except_pii" | "basic_attributes_only") | null;
             /** Default Dynamic Variables */
             default_dynamic_variables?: {
                 [key: string]: string;
@@ -711,12 +768,18 @@ export interface components {
             opt_out_call_recording?: boolean | null;
             /** Opt Out Transcript Storage */
             opt_out_transcript_storage?: boolean | null;
+            /** Pii Categories */
+            pii_categories?: ("email" | "credit_card" | "ssn" | "phone_number")[] | null;
             /** Pii Redaction Enabled */
             pii_redaction_enabled?: boolean | null;
             /** Post Call Analysis Data */
             post_call_analysis_data?: components["schemas"]["PostCallAnalysisVariable"][] | null;
             /** Post Call Analysis Model */
             post_call_analysis_model?: string | null;
+            /** Pronunciation Dictionary */
+            pronunciation_dictionary?: components["schemas"]["PronunciationEntry"][] | null;
+            /** Reminder Max Count */
+            reminder_max_count?: number | null;
             /** Reminder Message */
             reminder_message?: string | null;
             /** Reminder Trigger Ms */
@@ -737,6 +800,7 @@ export interface components {
             temperature?: number | null;
             /** Tts Engine */
             tts_engine?: string | null;
+            user_dtmf_options?: components["schemas"]["UserDtmfOptions"] | null;
             /** Voice Id */
             voice_id?: string | null;
             /** Voice Speed */
@@ -755,6 +819,13 @@ export interface components {
             webhook_signing_secret?: string | null;
             /** Webhook Url */
             webhook_url?: string | null;
+        };
+        /** AgentVersionCreate */
+        AgentVersionCreate: {
+            /** Description */
+            description?: string | null;
+            /** Title */
+            title?: string | null;
         };
         /** AgentWeightIn */
         AgentWeightIn: {
@@ -1441,6 +1512,11 @@ export interface components {
         OutboundCallRequest: {
             /** Agent Id */
             agent_id?: string | null;
+            /**
+             * Agent Version
+             * @default 0
+             */
+            agent_version?: number;
             /** Dialgem Llm Dynamic Variables */
             dialgem_llm_dynamic_variables?: {
                 [key: string]: unknown;
@@ -1458,6 +1534,8 @@ export interface components {
         PhoneNumberAssign: {
             /** Agent Id */
             agent_id?: string | null;
+            /** Agent Version */
+            agent_version?: number | null;
         };
         /** PhoneNumberCreate */
         PhoneNumberCreate: {
@@ -1473,12 +1551,22 @@ export interface components {
             flow_sms_sender_enabled?: boolean;
             /** Inbound Agent Id */
             inbound_agent_id?: string | null;
+            /**
+             * Inbound Agent Version
+             * @default 0
+             */
+            inbound_agent_version?: number;
             /** Nickname */
             nickname?: string | null;
             /** Number */
             number?: string | null;
             /** Outbound Agent Id */
             outbound_agent_id?: string | null;
+            /**
+             * Outbound Agent Version
+             * @default 0
+             */
+            outbound_agent_version?: number;
             /** Phone Number */
             phone_number?: string | null;
             /**
@@ -1503,12 +1591,16 @@ export interface components {
             flow_sms_sender_enabled?: boolean | null;
             /** Inbound Agent Id */
             inbound_agent_id?: string | null;
+            /** Inbound Agent Version */
+            inbound_agent_version?: number | null;
             /** Inbound Agents */
             inbound_agents?: components["schemas"]["AgentWeightIn"][] | null;
             /** Nickname */
             nickname?: string | null;
             /** Outbound Agent Id */
             outbound_agent_id?: string | null;
+            /** Outbound Agent Version */
+            outbound_agent_version?: number | null;
             /** Outbound Agents */
             outbound_agents?: components["schemas"]["AgentWeightIn"][] | null;
             /** Phone Number Type */
@@ -1534,8 +1626,15 @@ export interface components {
              * @default
              */
             description?: string;
+            /** Examples */
+            examples?: string[];
             /** Name */
             name: string;
+            /**
+             * Required
+             * @default false
+             */
+            required?: boolean;
             /**
              * Type
              * @enum {string}
@@ -1664,10 +1763,27 @@ export interface components {
             /** Variable Names */
             variable_names: string[];
         };
+        /** PronunciationEntry */
+        PronunciationEntry: {
+            /** Alias */
+            alias: string;
+            /**
+             * Case Sensitive
+             * @default false
+             */
+            case_sensitive?: boolean;
+            /** Word */
+            word: string;
+        };
         /** RegisterCallRequest */
         RegisterCallRequest: {
             /** Agent Id */
             agent_id: string;
+            /**
+             * Agent Version
+             * @default 0
+             */
+            agent_version?: number;
             /** Call Sid */
             call_sid?: string | null;
             /** Dialgem Llm Dynamic Variables */
@@ -1872,6 +1988,18 @@ export interface components {
             type?: ("cold_transfer" | "warm_transfer" | "agentic_warm_transfer") | null;
         } & {
             [key: string]: unknown;
+        };
+        /** UserDtmfOptions */
+        UserDtmfOptions: {
+            /** Digit Limit */
+            digit_limit?: number | null;
+            /** Termination Key */
+            termination_key?: ("#" | "*") | null;
+            /**
+             * Timeout Ms
+             * @default 2500
+             */
+            timeout_ms?: number;
         };
         /** ValidationError */
         ValidationError: {
@@ -2482,6 +2610,112 @@ export interface operations {
             path: {
                 agent_id: string;
                 server_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_agent_versions_v1_agents__agent_id__versions_get: {
+        parameters: {
+            query?: {
+                api_key?: string | null;
+                before_version?: number | null;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                agent_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    publish_agent_version_v1_agents__agent_id__versions_post: {
+        parameters: {
+            query?: {
+                api_key?: string | null;
+            };
+            header?: never;
+            path: {
+                agent_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgentVersionCreate"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_agent_version_v1_agents__agent_id__versions__version__get: {
+        parameters: {
+            query?: {
+                api_key?: string | null;
+            };
+            header?: never;
+            path: {
+                agent_id: string;
+                version: number;
             };
             cookie?: never;
         };

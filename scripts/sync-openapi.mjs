@@ -36,6 +36,8 @@ const PUBLIC_OPERATIONS = {
   "/v1/agents/{agent_id}/mcp-servers": ["get", "post"],
   "/v1/agents/{agent_id}/mcp-servers/{server_id}": ["patch", "delete"],
   "/v1/agents/{agent_id}/mcp-servers/{server_id}/test": ["post"],
+  "/v1/agents/{agent_id}/versions": ["get", "post"],
+  "/v1/agents/{agent_id}/versions/{version}": ["get"],
   "/v1/calls": ["get"],
   "/v1/calls/{call_id}": ["get", "patch", "delete"],
   "/v1/calls/{call_id}/stop": ["post"],
