@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url"
 import { defineConfig } from "vitest/config"
 
 // Runs against a real agent service. Skipped (not failed) when
-// DIALGEM_API_KEY / DIALGEM_BASE_URL are unset — see tests/live/smoke.test.ts.
+// DIALGEM_API_KEY is unset — see tests/live/smoke.test.ts. It runs against production.
 export default defineConfig({
   resolve: {
     alias: { "@dialgem/sdk": fileURLToPath(new URL("./src/index.ts", import.meta.url)) },

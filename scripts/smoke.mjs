@@ -33,9 +33,17 @@ for (const [label, sdk] of [
     }
   }
 
-  const client = new sdk.Dialgem({ apiKey: "zk_smoke", baseURL: "http://smoke.test", fetch })
+  const client = new sdk.Dialgem({ apiKey: "zk_smoke", fetch })
   assert.deepEqual(await client.agents.list(), [{ id: "a1" }], `${label}: list`)
+  assert.equal(seen[0].url, "https://api.dialgem.com/v1/agents", `${label}: fixed API address`)
   assert.equal(seen[0].init.headers["X-API-Key"], "zk_smoke", `${label}: auth header`)
+  // The address is not configurable; a leftover `baseURL` must fail loudly,
+  // not be ignored and send the key to production unnoticed.
+  assert.throws(
+    () => new sdk.Dialgem({ apiKey: "zk_smoke", baseURL: "http://smoke.test", fetch }),
+    (err) => err instanceof sdk.DialgemError,
+    `${label}: baseURL refused`,
+  )
 
   await assert.rejects(client.agents.retrieve("missing"), (err) => {
     assert.ok(err instanceof sdk.NotFoundError, `${label}: NotFoundError`)
