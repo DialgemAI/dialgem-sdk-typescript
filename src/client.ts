@@ -3,6 +3,7 @@ import { HttpClient, assertMaxRetries, assertTimeout, type Fetch } from "./core/
 import { Agents } from "./resources/agents.js"
 import { Calls } from "./resources/calls.js"
 import { FlowTemplates, PromptTemplates, Voices } from "./resources/catalog.js"
+import { Billing, Sessions, Usage } from "./resources/account.js"
 import { PhoneNumbers } from "./resources/phone-numbers.js"
 import { Webhooks, webhooks } from "./webhooks.js"
 
@@ -52,6 +53,10 @@ export class Dialgem {
   readonly voices: Voices
   readonly flowTemplates: FlowTemplates
   readonly promptTemplates: PromptTemplates
+  readonly usage: Usage
+  readonly billing: Billing
+  /** Calls in progress right now. */
+  readonly sessions: Sessions
   readonly webhooks: Webhooks = webhooks
 
   /** Always `https://api.dialgem.com`. */
@@ -103,6 +108,9 @@ export class Dialgem {
     this.voices = new Voices(http)
     this.flowTemplates = new FlowTemplates(http)
     this.promptTemplates = new PromptTemplates(http)
+    this.usage = new Usage(http)
+    this.billing = new Billing(http)
+    this.sessions = new Sessions(http)
   }
 }
 

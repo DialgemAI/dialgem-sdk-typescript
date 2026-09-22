@@ -19,7 +19,11 @@ describe("resource methods", () => {
 
   it("the table covers every public resource method", () => {
     const { fetch } = mockFetch()
-    expect(publicMethodNames(client(fetch))).toEqual(SDK_CALLS.map((c) => c.name).sort())
+    expect(publicMethodNames(client(fetch))).toEqual(
+      SDK_CALLS.filter((c) => !c.extra)
+        .map((c) => c.name)
+        .sort(),
+    )
   })
 
   it("URI-encodes ids", async () => {

@@ -39,6 +39,7 @@ export type { Agents, AgentFunctions, AgentKnowledge, AgentMCPServers, AgentVers
 export type { Calls } from "./resources/calls.js"
 export type { PhoneNumbers } from "./resources/phone-numbers.js"
 export type { FlowTemplates, PromptTemplates, Voices } from "./resources/catalog.js"
+export type { Billing, Sessions, Usage } from "./resources/account.js"
 
 export type * from "./types/params.js"
 export type * from "./types/agent.js"
@@ -47,6 +48,9 @@ export type * from "./types/agent-version.js"
 export type * from "./types/call.js"
 export type * from "./types/phone-number.js"
 export type * from "./types/catalog.js"
+export type * from "./types/usage.js"
+export type * from "./types/billing.js"
+export type * from "./types/session.js"
 export type {
   CallAnalyzedEvent,
   CallEndedEvent,

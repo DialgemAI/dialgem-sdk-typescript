@@ -14,6 +14,8 @@ export interface SdkCall {
   body?: unknown
   /** Set for a multipart upload, whose body is not a comparable JSON value. */
   skipBody?: boolean
+  /** A second case for a method already listed: exercised, but not counted as another method. */
+  extra?: boolean
 }
 
 export const SDK_CALLS: SdkCall[] = [
@@ -56,6 +58,12 @@ export const SDK_CALLS: SdkCall[] = [
     path: "/v1/calls/outbound",
     body: { from_: "+14155550100", to: "+14155550199", agent_id: "ag_1" },
   },
+  { name: "usage.retrieve", invoke: (c) => c.usage.retrieve(), method: "GET", path: "/v1/usage" },
+  { name: "usage.retrieve", extra: true, invoke: (c) => c.usage.retrieve({ date_from: "2026-09-01", date_to: "2026-09-30" }), method: "GET", path: "/v1/usage?date_from=2026-09-01&date_to=2026-09-30" },
+  { name: "billing.retrieve", invoke: (c) => c.billing.retrieve(), method: "GET", path: "/v1/billing" },
+  { name: "billing.transactions", invoke: (c) => c.billing.transactions({ page: 2, page_size: 50 }), method: "GET", path: "/v1/billing/transactions?page=2&page_size=50" },
+  { name: "sessions.list", invoke: (c) => c.sessions.list(), method: "GET", path: "/v1/agent/sessions" },
+
   { name: "calls.register", invoke: (c) => c.calls.register({ agent_id: "ag_1", call_sid: "CA1" }), method: "POST", path: "/v1/calls/register", body: { agent_id: "ag_1", call_sid: "CA1" } },
 
   { name: "phoneNumbers.create", invoke: (c) => c.phoneNumbers.create({ phone_number: "+14155550100" }), method: "POST", path: "/v1/phone-numbers", body: { phone_number: "+14155550100" } },
@@ -100,7 +108,17 @@ export function publicMethodNames(c: Dialgem): string[] {
       walk(value, `${prefix}.${key}`)
     }
   }
-  for (const resource of ["agents", "calls", "phoneNumbers", "voices", "flowTemplates", "promptTemplates"] as const) {
+  for (const resource of [
+    "agents",
+    "calls",
+    "phoneNumbers",
+    "voices",
+    "flowTemplates",
+    "promptTemplates",
+    "usage",
+    "billing",
+    "sessions",
+  ] as const) {
     walk(c[resource], resource)
   }
   return names.sort()
