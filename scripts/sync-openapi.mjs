@@ -54,6 +54,10 @@ const PUBLIC_OPERATIONS = {
   "/v1/flow-templates/{template_id}": ["get"],
   "/v1/prompt-templates": ["get"],
   "/v1/prompt-templates/{template_id}": ["get"],
+  "/v1/usage": ["get"],
+  "/v1/billing": ["get"],
+  "/v1/billing/transactions": ["get"],
+  "/v1/agent/sessions": ["get"],
 }
 
 function arg(name) {

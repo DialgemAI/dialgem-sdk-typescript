@@ -255,6 +255,33 @@ than quietly picking one.
 `voices.delete(voice.id)` removes it at the provider and here. It refuses with a
 409 while an agent still uses it, rather than leaving that agent without a voice.
 
+### 8. Watch spend and stay in credit
+
+Calls are paid for out of a prepaid balance: each finished call's cost is
+deducted, and once the balance is spent new calls are refused with a
+`402` (`PaymentRequiredError`). Top-ups and auto-recharge are done by a person
+in the dashboard — they need an admin session, and an API key is not one — so
+what your backend does is watch.
+
+```ts
+const billing = await dialgem.billing.retrieve()
+if (billing.enabled && billing.balance < billing.rate_per_minute * 30) {
+  alertTheTeam(`Dialgem credit is down to ${(billing.balance / 10_000).toFixed(2)}`)
+}
+
+// What it went on, this month so far.
+const usage = await dialgem.usage.retrieve()
+for (const agent of usage.by_agent.slice(0, 5)) {
+  console.log(agent.agent_name, (agent.cost / 10_000).toFixed(2), agent.billed_seconds)
+}
+
+// Calls in progress right now, before placing another.
+const { count } = await dialgem.sessions.list()
+```
+
+Every amount is an integer in units of $0.0001, the same as `call.call_cost`:
+divide by 10,000 for dollars. `usage` days are UTC.
+
 ## Errors
 
 Every error extends `DialgemError`. When the API returns an HTTP error, the SDK throws an `APIError` subclass chosen by status code:
@@ -307,6 +334,9 @@ The SDK never follows redirects. The API does not issue them, and following one 
 | `phoneNumbers` | `create`, `list`, `retrieve`, `update`, `assign`, `delete` |
 | `voices` | `list`, `clone`, `delete` |
 | `flowTemplates`, `promptTemplates` | `list`, `retrieve` |
+| `usage` | `retrieve` |
+| `billing` | `retrieve`, `transactions` |
+| `sessions` | `list` |
 | `webhooks` | `verify`, `constructEvent`, `constructFunctionCall` |
 
 In-browser web calls are not part of this package.
@@ -326,6 +356,19 @@ pnpm gen:types
 
 # Against a running API, with an organization key:
 DIALGEM_API_KEY=zk_… pnpm test:live   # runs against api.dialgem.com — use a test org's key
+```
+
+The API address is fixed at `https://api.dialgem.com` and `baseURL` is refused,
+so a key can never start hitting production by accident. To exercise the SDK
+against a local or staging stack, pass a `fetch` that rewrites the origin — it
+is explicit, it stays in your test setup, and it cannot be switched on by an
+environment variable someone forgot to unset:
+
+```ts
+const local = new Dialgem({
+  apiKey: "zk_local",
+  fetch: (url, init) => fetch(String(url).replace("https://api.dialgem.com", "http://localhost:8002"), init),
+})
 ```
 
 Request-body types are generated from `openapi/openapi.json`. Response types in `src/types/` are written by hand, so a change to a response shape needs a matching edit there.
