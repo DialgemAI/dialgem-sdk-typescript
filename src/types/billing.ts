@@ -69,5 +69,7 @@ export interface CreditTransactionList {
   transactions: CreditTransaction[]
   page: number
   page_size: number
+  /** Every movement on the ledger, across all pages. */
+  total: number
   has_more: boolean
 }
