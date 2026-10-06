@@ -97,8 +97,11 @@ export type CallSessionStatus = "ongoing" | "registered" | "ended" | "error" | (
 export interface TranscriptTurn {
   role: "user" | "agent"
   text: string
-  /** ISO 8601. */
+  /** ISO 8601. When the line was committed, which is after it was spoken. */
   timestamp: string
+  /** Where this line starts in the call recording, in milliseconds. Absent
+   *  when it was not measured, including on calls made before it existed. */
+  start_ms?: number
 }
 
 export interface CallAnalysis {
