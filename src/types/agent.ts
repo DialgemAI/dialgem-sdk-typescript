@@ -4,6 +4,7 @@ import type {
   AgentType,
   FlowConfig,
   PostCallAnalysisVariable,
+  PostCallBuiltinFields,
   PromptState,
   WebhookEventType,
 } from "./params.js"
@@ -35,6 +36,11 @@ export interface Agent {
   default_dynamic_variables: Record<string, string>
 
   responsiveness: number
+  /**
+   * Wait a little longer (up to 1.5 s) when the caller sounds unfinished: a
+   * trailing "and", a comma, a half-read number. Off by default.
+   */
+  adaptive_response_wait: boolean
   interruption_sensitivity: number
   enable_backchannel: boolean
   backchannel_frequency: number
@@ -49,7 +55,22 @@ export interface Agent {
   language: string
   enable_transcription_formatting: boolean
   boosted_keywords: string[]
+  /**
+   * `noise-and-background-speech-cancellation` is a stronger setting of the same
+   * stationary-noise filter, scaled by `denoising_strength`; it does not isolate
+   * the caller from other voices.
+   */
   denoising_mode: NonNullable<AgentCreateParams["denoising_mode"]>
+  /** 0-1. Only read by `noise-and-background-speech-cancellation`. */
+  denoising_strength: number
+  /**
+   * `fast` uses Deepgram; `accurate` uses AssemblyAI when the server has it
+   * configured (English only) and falls back to Deepgram otherwise. Only
+   * applies when `stt_model` is `deepgram`.
+   */
+  stt_mode: NonNullable<AgentCreateParams["stt_mode"]>
+  /** `medical` uses Deepgram's medical model (English only), in either `stt_mode`. */
+  vocab_specialization: NonNullable<AgentCreateParams["vocab_specialization"]>
 
   begin_message_delay_ms: number
   end_call_after_silence_ms: number
@@ -58,9 +79,28 @@ export interface Agent {
   voicemail_detection_enabled: boolean
   voicemail_action: NonNullable<AgentCreateParams["voicemail_action"]>
   voicemail_message: string
+  /** When set, the voicemail is written by the LLM from this instruction (outbound calls). */
+  voicemail_prompt: string
+  /** Hang up when an automated phone menu is detected (outbound calls). */
+  ivr_hangup_enabled: boolean
+  /** How the agent should handle a menu when `ivr_hangup_enabled` is off. */
+  ivr_prompt: string
+  /** Say `call_screen_message` once to a phone's call-screening assistant (outbound calls). */
+  call_screen_handling_enabled: boolean
+  call_screen_message: string
+  /**
+   * Offer the agent a do-not-call tool: a contact who asks to stop being called is
+   * added to the organization's do-not-call list and the call ends.
+   */
+  dnc_detection_enabled: boolean
 
   post_call_analysis_data: PostCallAnalysisVariable[]
   post_call_analysis_model: string
+  /**
+   * Settings for the always-on analysis fields. A missing key means defaults;
+   * `{ enabled: false }` stops that field being extracted (it is stored null).
+   */
+  post_call_builtin_fields: PostCallBuiltinFields
 
   fallback_llm_provider: string | null
   fallback_llm_model: string | null
@@ -78,6 +118,8 @@ export interface Agent {
    */
   webhook_signing_secret: string | null
   has_webhook_signing_secret: boolean
+  /** How long, in ms, a receiver gets to answer one delivery attempt. 1000–30000, default 10000. */
+  webhook_timeout_ms: number
 
   /** ISO 8601, no timezone suffix (UTC). */
   created_at: string | null
