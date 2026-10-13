@@ -50,6 +50,7 @@ const PUBLIC_OPERATIONS = {
   "/v1/voices": ["get"],
   "/v1/voices/clone": ["post"],
   "/v1/voices/{voice_id}": ["delete"],
+  "/v1/models/extraction": ["get"],
   "/v1/flow-templates": ["get"],
   "/v1/flow-templates/{template_id}": ["get"],
   "/v1/prompt-templates": ["get"],
