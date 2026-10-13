@@ -24,6 +24,25 @@ export interface Voice {
   updated_at: string | null
 }
 
+/** A model usable for an agent's post-call analysis (`post_call_analysis_model`). */
+export interface ExtractionModel {
+  /** Put this in `post_call_analysis_model`. */
+  id: string
+  provider: "anthropic" | "openai"
+  label: string
+  /**
+   * Estimated USD for one typical extraction, derived from list prices. For
+   * comparing models; not a metered charge.
+   */
+  est_cost_per_session: number
+}
+
+export interface ExtractionModelList {
+  /** The model an agent gets when none is set. */
+  default: string
+  models: ExtractionModel[]
+}
+
 /** One audio sample for cloning. `Blob` and `File` both satisfy this. */
 export type VoiceCloneFile = Blob | { name?: string; type?: string }
 

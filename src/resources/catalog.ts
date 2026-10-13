@@ -1,6 +1,7 @@
 import { DialgemError } from "../core/errors.js"
 import type { Query, RequestOptions } from "../core/http.js"
 import type {
+  ExtractionModelList,
   FlowTemplate,
   FlowTemplateSummary,
   PromptTemplate,
@@ -72,6 +73,13 @@ export class Voices extends APIResource {
    */
   delete(voiceId: string, options?: RequestOptions): Promise<VoiceDeleteResponse> {
     return this._client.delete(path`/v1/voices/${voiceId}`, options)
+  }
+}
+
+export class ExtractionModels extends APIResource {
+  /** Models an agent may use for post-call analysis, with an estimated cost per session. */
+  list(options?: RequestOptions): Promise<ExtractionModelList> {
+    return this._client.get("/v1/models/extraction", undefined, options)
   }
 }
 

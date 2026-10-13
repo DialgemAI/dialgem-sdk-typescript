@@ -38,7 +38,7 @@ export {
 export type { Agents, AgentFunctions, AgentKnowledge, AgentMCPServers, AgentVersions } from "./resources/agents.js"
 export type { Calls } from "./resources/calls.js"
 export type { PhoneNumbers } from "./resources/phone-numbers.js"
-export type { FlowTemplates, PromptTemplates, Voices } from "./resources/catalog.js"
+export type { ExtractionModels, FlowTemplates, PromptTemplates, Voices } from "./resources/catalog.js"
 export type { Billing, Sessions, Usage } from "./resources/account.js"
 
 export type * from "./types/params.js"

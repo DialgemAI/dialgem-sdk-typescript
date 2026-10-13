@@ -2529,6 +2529,52 @@
         }
       }
     },
+    "/v1/models/extraction": {
+      "get": {
+        "summary": "List Extraction Models",
+        "operationId": "list_extraction_models_v1_models_extraction_get",
+        "parameters": [
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response List Extraction Models V1 Models Extraction Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/flow-templates": {
       "get": {
         "summary": "List Flow Templates",
@@ -3234,10 +3280,41 @@
             "type": "string",
             "enum": [
               "off",
-              "noise-cancellation"
+              "noise-cancellation",
+              "noise-and-background-speech-cancellation"
             ],
             "title": "Denoising Mode",
             "default": "off"
+          },
+          "adaptive_response_wait": {
+            "type": "boolean",
+            "title": "Adaptive Response Wait",
+            "default": false
+          },
+          "denoising_strength": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Denoising Strength",
+            "default": 0.5
+          },
+          "stt_mode": {
+            "type": "string",
+            "enum": [
+              "fast",
+              "accurate"
+            ],
+            "title": "Stt Mode",
+            "default": "fast"
+          },
+          "vocab_specialization": {
+            "type": "string",
+            "enum": [
+              "general",
+              "medical"
+            ],
+            "title": "Vocab Specialization",
+            "default": "general"
           },
           "begin_message_delay_ms": {
             "type": "integer",
@@ -3248,7 +3325,7 @@
           },
           "end_call_after_silence_ms": {
             "type": "integer",
-            "maximum": 3600000,
+            "maximum": 1800000,
             "minimum": 10000,
             "title": "End Call After Silence Ms",
             "default": 600000
@@ -3262,7 +3339,7 @@
           },
           "ring_duration_ms": {
             "type": "integer",
-            "maximum": 90000,
+            "maximum": 300000,
             "minimum": 5000,
             "title": "Ring Duration Ms",
             "default": 30000
@@ -3286,6 +3363,39 @@
             "title": "Voicemail Message",
             "default": ""
           },
+          "voicemail_prompt": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Voicemail Prompt",
+            "default": ""
+          },
+          "ivr_hangup_enabled": {
+            "type": "boolean",
+            "title": "Ivr Hangup Enabled",
+            "default": false
+          },
+          "ivr_prompt": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Ivr Prompt",
+            "default": ""
+          },
+          "call_screen_handling_enabled": {
+            "type": "boolean",
+            "title": "Call Screen Handling Enabled",
+            "default": false
+          },
+          "call_screen_message": {
+            "type": "string",
+            "maxLength": 1000,
+            "title": "Call Screen Message",
+            "default": ""
+          },
+          "dnc_detection_enabled": {
+            "type": "boolean",
+            "title": "Dnc Detection Enabled",
+            "default": false
+          },
           "post_call_analysis_data": {
             "items": {
               "$ref": "#/components/schemas/PostCallAnalysisVariable"
@@ -3297,6 +3407,9 @@
             "type": "string",
             "title": "Post Call Analysis Model",
             "default": "claude-sonnet-4-6"
+          },
+          "post_call_builtin_fields": {
+            "$ref": "#/components/schemas/BuiltinAnalysisFields"
           },
           "fallback_llm_provider": {
             "anyOf": [
@@ -3403,7 +3516,12 @@
               "enum": [
                 "call_started",
                 "call_ended",
-                "call_analyzed"
+                "call_analyzed",
+                "transcript_updated",
+                "transfer_started",
+                "transfer_bridged",
+                "transfer_cancelled",
+                "transfer_ended"
               ]
             },
             "type": "array",
@@ -3419,6 +3537,13 @@
               }
             ],
             "title": "Webhook Signing Secret"
+          },
+          "webhook_timeout_ms": {
+            "type": "integer",
+            "maximum": 30000,
+            "minimum": 1000,
+            "title": "Webhook Timeout Ms",
+            "default": 10000
           }
         },
         "type": "object",
@@ -3990,7 +4115,8 @@
                 "type": "string",
                 "enum": [
                   "off",
-                  "noise-cancellation"
+                  "noise-cancellation",
+                  "noise-and-background-speech-cancellation"
                 ]
               },
               {
@@ -3998,6 +4124,60 @@
               }
             ],
             "title": "Denoising Mode"
+          },
+          "adaptive_response_wait": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Adaptive Response Wait"
+          },
+          "denoising_strength": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1,
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Denoising Strength"
+          },
+          "stt_mode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "fast",
+                  "accurate"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stt Mode"
+          },
+          "vocab_specialization": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "general",
+                  "medical"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vocab Specialization"
           },
           "begin_message_delay_ms": {
             "anyOf": [
@@ -4016,7 +4196,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 3600000,
+                "maximum": 1800000,
                 "minimum": 10000
               },
               {
@@ -4042,7 +4222,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 90000,
+                "maximum": 300000,
                 "minimum": 5000
               },
               {
@@ -4088,6 +4268,75 @@
             ],
             "title": "Voicemail Message"
           },
+          "voicemail_prompt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voicemail Prompt"
+          },
+          "ivr_hangup_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ivr Hangup Enabled"
+          },
+          "ivr_prompt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ivr Prompt"
+          },
+          "call_screen_handling_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Call Screen Handling Enabled"
+          },
+          "call_screen_message": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Call Screen Message"
+          },
+          "dnc_detection_enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dnc Detection Enabled"
+          },
           "post_call_analysis_data": {
             "anyOf": [
               {
@@ -4112,6 +4361,16 @@
               }
             ],
             "title": "Post Call Analysis Model"
+          },
+          "post_call_builtin_fields": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BuiltinAnalysisFields"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "fallback_llm_provider": {
             "anyOf": [
@@ -4251,7 +4510,12 @@
                   "enum": [
                     "call_started",
                     "call_ended",
-                    "call_analyzed"
+                    "call_analyzed",
+                    "transcript_updated",
+                    "transfer_started",
+                    "transfer_bridged",
+                    "transfer_cancelled",
+                    "transfer_ended"
                   ]
                 },
                 "type": "array"
@@ -4272,6 +4536,19 @@
               }
             ],
             "title": "Webhook Signing Secret"
+          },
+          "webhook_timeout_ms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 30000,
+                "minimum": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Timeout Ms"
           }
         },
         "type": "object",
@@ -4507,6 +4784,80 @@
           "type"
         ],
         "title": "BranchNode"
+      },
+      "BuiltinAnalysisField": {
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled",
+            "default": true
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "choices": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 20
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Choices"
+          }
+        },
+        "type": "object",
+        "title": "BuiltinAnalysisField"
+      },
+      "BuiltinAnalysisFields": {
+        "properties": {
+          "call_summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BuiltinAnalysisField"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "call_successful": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BuiltinAnalysisField"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "user_sentiment": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BuiltinAnalysisField"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "BuiltinAnalysisFields"
       },
       "CallPatch": {
         "properties": {
@@ -7642,8 +7993,35 @@
           "alias": {
             "type": "string",
             "maxLength": 200,
-            "minLength": 1,
-            "title": "Alias"
+            "title": "Alias",
+            "default": ""
+          },
+          "alphabet": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "ipa",
+                  "cmu"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Alphabet"
+          },
+          "phoneme": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phoneme"
           },
           "case_sensitive": {
             "type": "boolean",
@@ -7653,8 +8031,7 @@
         },
         "type": "object",
         "required": [
-          "word",
-          "alias"
+          "word"
         ],
         "title": "PronunciationEntry"
       },
@@ -8548,6 +8925,16 @@
               {
                 "type": "string",
                 "enum": [
+                  "0",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "5",
+                  "6",
+                  "7",
+                  "8",
+                  "9",
                   "#",
                   "*"
                 ]

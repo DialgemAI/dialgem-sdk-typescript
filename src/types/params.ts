@@ -40,6 +40,8 @@ export type FlowConfig = Schemas["FlowConfig"]
 export type PromptState = Schemas["PromptState"]
 /** A field extracted from the transcript after the call ends. */
 export type PostCallAnalysisVariable = Schemas["PostCallAnalysisVariable"]
+/** Settings for `call_summary`, `call_successful` and `user_sentiment`. */
+export type PostCallBuiltinFields = Schemas["BuiltinAnalysisFields"]
 export type KeyValuePair = Schemas["KVPair"]
 export type AgentWeight = Schemas["AgentWeightIn"]
 

@@ -392,6 +392,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/models/extraction": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Extraction Models */
+        get: operations["list_extraction_models_v1_models_extraction_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/phone-numbers": {
         parameters: {
             query?: never;
@@ -571,6 +588,11 @@ export interface components {
         /** AgentCreate */
         AgentCreate: {
             /**
+             * Adaptive Response Wait
+             * @default false
+             */
+            adaptive_response_wait?: boolean;
+            /**
              * Agent Type
              * @default llm
              * @enum {string}
@@ -604,6 +626,16 @@ export interface components {
             begin_message_delay_ms?: number;
             /** Boosted Keywords */
             boosted_keywords?: string[];
+            /**
+             * Call Screen Handling Enabled
+             * @default false
+             */
+            call_screen_handling_enabled?: boolean;
+            /**
+             * Call Screen Message
+             * @default
+             */
+            call_screen_message?: string;
             /** Data Retention Days */
             data_retention_days?: number | null;
             /**
@@ -621,7 +653,17 @@ export interface components {
              * @default off
              * @enum {string}
              */
-            denoising_mode?: "off" | "noise-cancellation";
+            denoising_mode?: "off" | "noise-cancellation" | "noise-and-background-speech-cancellation";
+            /**
+             * Denoising Strength
+             * @default 0.5
+             */
+            denoising_strength?: number;
+            /**
+             * Dnc Detection Enabled
+             * @default false
+             */
+            dnc_detection_enabled?: boolean;
             /**
              * Enable Backchannel
              * @default false
@@ -651,6 +693,16 @@ export interface components {
              * @default 1
              */
             interruption_sensitivity?: number;
+            /**
+             * Ivr Hangup Enabled
+             * @default false
+             */
+            ivr_hangup_enabled?: boolean;
+            /**
+             * Ivr Prompt
+             * @default
+             */
+            ivr_prompt?: string;
             /**
              * Language
              * @default en
@@ -699,6 +751,7 @@ export interface components {
              * @default claude-sonnet-4-6
              */
             post_call_analysis_model?: string;
+            post_call_builtin_fields?: components["schemas"]["BuiltinAnalysisFields"];
             /** Pronunciation Dictionary */
             pronunciation_dictionary?: components["schemas"]["PronunciationEntry"][];
             /** Reminder Max Count */
@@ -728,6 +781,12 @@ export interface components {
             /** States */
             states?: components["schemas"]["PromptState"][];
             /**
+             * Stt Mode
+             * @default fast
+             * @enum {string}
+             */
+            stt_mode?: "fast" | "accurate";
+            /**
              * Stt Model
              * @enum {string}
              */
@@ -748,6 +807,12 @@ export interface components {
              */
             tts_engine?: string;
             user_dtmf_options?: components["schemas"]["UserDtmfOptions"];
+            /**
+             * Vocab Specialization
+             * @default general
+             * @enum {string}
+             */
+            vocab_specialization?: "general" | "medical";
             /**
              * Voice Id
              * @default
@@ -779,10 +844,20 @@ export interface components {
              * @default
              */
             voicemail_message?: string;
+            /**
+             * Voicemail Prompt
+             * @default
+             */
+            voicemail_prompt?: string;
             /** Webhook Events */
-            webhook_events?: ("call_started" | "call_ended" | "call_analyzed")[];
+            webhook_events?: ("call_started" | "call_ended" | "call_analyzed" | "transcript_updated" | "transfer_started" | "transfer_bridged" | "transfer_cancelled" | "transfer_ended")[];
             /** Webhook Signing Secret */
             webhook_signing_secret?: string | null;
+            /**
+             * Webhook Timeout Ms
+             * @default 10000
+             */
+            webhook_timeout_ms?: number;
             /** Webhook Url */
             webhook_url?: string | null;
         };
@@ -830,6 +905,8 @@ export interface components {
         };
         /** AgentUpdate */
         AgentUpdate: {
+            /** Adaptive Response Wait */
+            adaptive_response_wait?: boolean | null;
             /** Agent Type */
             agent_type?: ("llm" | "multi_prompt" | "flow") | null;
             /** Allow User Dtmf */
@@ -844,6 +921,10 @@ export interface components {
             begin_message_delay_ms?: number | null;
             /** Boosted Keywords */
             boosted_keywords?: string[] | null;
+            /** Call Screen Handling Enabled */
+            call_screen_handling_enabled?: boolean | null;
+            /** Call Screen Message */
+            call_screen_message?: string | null;
             /** Data Retention Days */
             data_retention_days?: number | null;
             /** Data Storage Setting */
@@ -853,7 +934,11 @@ export interface components {
                 [key: string]: string;
             } | null;
             /** Denoising Mode */
-            denoising_mode?: ("off" | "noise-cancellation") | null;
+            denoising_mode?: ("off" | "noise-cancellation" | "noise-and-background-speech-cancellation") | null;
+            /** Denoising Strength */
+            denoising_strength?: number | null;
+            /** Dnc Detection Enabled */
+            dnc_detection_enabled?: boolean | null;
             /** Enable Backchannel */
             enable_backchannel?: boolean | null;
             /** Enable Transcription Formatting */
@@ -871,6 +956,10 @@ export interface components {
             flow_config?: components["schemas"]["FlowConfig"] | null;
             /** Interruption Sensitivity */
             interruption_sensitivity?: number | null;
+            /** Ivr Hangup Enabled */
+            ivr_hangup_enabled?: boolean | null;
+            /** Ivr Prompt */
+            ivr_prompt?: string | null;
             /** Language */
             language?: string | null;
             /** Llm Model */
@@ -895,6 +984,7 @@ export interface components {
             post_call_analysis_data?: components["schemas"]["PostCallAnalysisVariable"][] | null;
             /** Post Call Analysis Model */
             post_call_analysis_model?: string | null;
+            post_call_builtin_fields?: components["schemas"]["BuiltinAnalysisFields"] | null;
             /** Pronunciation Dictionary */
             pronunciation_dictionary?: components["schemas"]["PronunciationEntry"][] | null;
             /** Reminder Max Count */
@@ -911,6 +1001,8 @@ export interface components {
             starting_state?: string | null;
             /** States */
             states?: components["schemas"]["PromptState"][] | null;
+            /** Stt Mode */
+            stt_mode?: ("fast" | "accurate") | null;
             /** Stt Model */
             stt_model?: ("whisper" | "conformer" | "deepgram") | null;
             /** System Prompt */
@@ -920,6 +1012,8 @@ export interface components {
             /** Tts Engine */
             tts_engine?: string | null;
             user_dtmf_options?: components["schemas"]["UserDtmfOptions"] | null;
+            /** Vocab Specialization */
+            vocab_specialization?: ("general" | "medical") | null;
             /** Voice Id */
             voice_id?: string | null;
             /** Voice Speed */
@@ -932,10 +1026,14 @@ export interface components {
             voicemail_detection_enabled?: boolean | null;
             /** Voicemail Message */
             voicemail_message?: string | null;
+            /** Voicemail Prompt */
+            voicemail_prompt?: string | null;
             /** Webhook Events */
-            webhook_events?: ("call_started" | "call_ended" | "call_analyzed")[] | null;
+            webhook_events?: ("call_started" | "call_ended" | "call_analyzed" | "transcript_updated" | "transfer_started" | "transfer_bridged" | "transfer_cancelled" | "transfer_ended")[] | null;
             /** Webhook Signing Secret */
             webhook_signing_secret?: string | null;
+            /** Webhook Timeout Ms */
+            webhook_timeout_ms?: number | null;
             /** Webhook Url */
             webhook_url?: string | null;
         };
@@ -1002,6 +1100,24 @@ export interface components {
             type: "branch";
         } & {
             [key: string]: unknown;
+        };
+        /** BuiltinAnalysisField */
+        BuiltinAnalysisField: {
+            /** Choices */
+            choices?: string[] | null;
+            /** Description */
+            description?: string | null;
+            /**
+             * Enabled
+             * @default true
+             */
+            enabled?: boolean;
+        };
+        /** BuiltinAnalysisFields */
+        BuiltinAnalysisFields: {
+            call_successful?: components["schemas"]["BuiltinAnalysisField"] | null;
+            call_summary?: components["schemas"]["BuiltinAnalysisField"] | null;
+            user_sentiment?: components["schemas"]["BuiltinAnalysisField"] | null;
         };
         /** CallPatch */
         CallPatch: {
@@ -1909,13 +2025,20 @@ export interface components {
         };
         /** PronunciationEntry */
         PronunciationEntry: {
-            /** Alias */
-            alias: string;
+            /**
+             * Alias
+             * @default
+             */
+            alias?: string;
+            /** Alphabet */
+            alphabet?: ("ipa" | "cmu") | null;
             /**
              * Case Sensitive
              * @default false
              */
             case_sensitive?: boolean;
+            /** Phoneme */
+            phoneme?: string | null;
             /** Word */
             word: string;
         };
@@ -2138,7 +2261,7 @@ export interface components {
             /** Digit Limit */
             digit_limit?: number | null;
             /** Termination Key */
-            termination_key?: ("#" | "*") | null;
+            termination_key?: ("0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "#" | "*") | null;
             /**
              * Timeout Ms
              * @default 2500
@@ -3273,6 +3396,37 @@ export interface operations {
             path: {
                 template_id: string;
             };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_extraction_models_v1_models_extraction_get: {
+        parameters: {
+            query?: {
+                api_key?: string | null;
+            };
+            header?: never;
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
