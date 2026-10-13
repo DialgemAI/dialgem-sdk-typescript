@@ -126,13 +126,13 @@ Your Twilio credentials are never shared with Dialgem. `stream_url` is signed an
 
 ### 4. Verify webhooks
 
-Set `webhook_url`, `webhook_events` and `webhook_signing_secret` on the agent. Dialgem then POSTs `call_started`, `call_ended` and `call_analyzed` events. Each body is `{ event, call_id, agent_id, call }`, where `call` is the full call record, and each request is signed:
+Set `webhook_url`, `webhook_events` and `webhook_signing_secret` on the agent (and, optionally, `webhook_timeout_ms`, 1000–30000, default 10000, to bound how long each delivery attempt waits for your server). Dialgem then POSTs the events you subscribe to: `call_started`, `call_ended`, `call_analyzed`, `transcript_updated`, `transfer_started`, `transfer_bridged`, `transfer_cancelled` and `transfer_ended`. Each body is `{ event, call_id, agent_id, call }`, where `call` is the full call record; `transcript_updated` also carries `role`, `turn_index` and the `transcript` so far, and the transfer events carry `transfer: { target?, mode?, reason? }`. Each request is signed:
 
 ```
 x-dialgem-signature: v=<timestamp_ms>,d=<hex>      hex = HMAC-SHA256(secret, raw_body + timestamp_ms)
 ```
 
-`constructEvent` and `verify` check the HMAC and reject signatures more than 5 minutes old, so a captured request cannot be replayed. `call_ended` arrives as soon as the call ends; `call_analyzed` follows once the summary, sentiment and your extracted variables are ready.
+`constructEvent` and `verify` check the HMAC and reject signatures more than 5 minutes old, so a captured request cannot be replayed. `call_ended` arrives as soon as the call ends; `call_analyzed` follows once the summary, sentiment and your extracted variables are ready. `transcript_updated` is sent per turn and may be retried out of order, so keep the highest `turn_index`. For a cold transfer, `transfer_bridged` is sent when the transferred leg finishes, followed by `transfer_ended`.
 
 > **Verify the raw body.** The signature covers the exact bytes Dialgem sent. A body that was parsed and re-serialized, for example by `express.json()`, will never verify, even when the JSON is identical.
 
