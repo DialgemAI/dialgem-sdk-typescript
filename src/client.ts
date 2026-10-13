@@ -2,7 +2,7 @@ import { DialgemError } from "./core/errors.js"
 import { HttpClient, assertMaxRetries, assertTimeout, type Fetch } from "./core/http.js"
 import { Agents } from "./resources/agents.js"
 import { Calls } from "./resources/calls.js"
-import { FlowTemplates, PromptTemplates, Voices } from "./resources/catalog.js"
+import { ExtractionModels, FlowTemplates, PromptTemplates, Voices } from "./resources/catalog.js"
 import { Billing, Sessions, Usage } from "./resources/account.js"
 import { PhoneNumbers } from "./resources/phone-numbers.js"
 import { Webhooks, webhooks } from "./webhooks.js"
@@ -51,6 +51,8 @@ export class Dialgem {
   readonly calls: Calls
   readonly phoneNumbers: PhoneNumbers
   readonly voices: Voices
+  /** Models available for post-call analysis. */
+  readonly extractionModels: ExtractionModels
   readonly flowTemplates: FlowTemplates
   readonly promptTemplates: PromptTemplates
   readonly usage: Usage
@@ -106,6 +108,7 @@ export class Dialgem {
     this.calls = new Calls(http)
     this.phoneNumbers = new PhoneNumbers(http)
     this.voices = new Voices(http)
+    this.extractionModels = new ExtractionModels(http)
     this.flowTemplates = new FlowTemplates(http)
     this.promptTemplates = new PromptTemplates(http)
     this.usage = new Usage(http)

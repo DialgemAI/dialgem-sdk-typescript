@@ -87,6 +87,7 @@ export const SDK_CALLS: SdkCall[] = [
     // A FormData body: asserted part by part in resources.test.ts instead.
     skipBody: true,
   },
+  { name: "extractionModels.list", invoke: (c) => c.extractionModels.list(), method: "GET", path: "/v1/models/extraction" },
   { name: "voices.delete", invoke: (c) => c.voices.delete("v_1"), method: "DELETE", path: "/v1/voices/v_1" },
   { name: "flowTemplates.list", invoke: (c) => c.flowTemplates.list(), method: "GET", path: "/v1/flow-templates" },
   { name: "flowTemplates.retrieve", invoke: (c) => c.flowTemplates.retrieve("tpl_1"), method: "GET", path: "/v1/flow-templates/tpl_1" },
@@ -113,6 +114,7 @@ export function publicMethodNames(c: Dialgem): string[] {
     "calls",
     "phoneNumbers",
     "voices",
+    "extractionModels",
     "flowTemplates",
     "promptTemplates",
     "usage",
