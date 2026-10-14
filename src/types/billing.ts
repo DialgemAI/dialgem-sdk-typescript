@@ -29,6 +29,8 @@ export interface BillingSummary {
     threshold: number | null
     /** How much each recharge adds. */
     amount: number | null
+    /** Most auto-recharge may add per calendar month (units of $0.0001); null = no cap. */
+    monthly_limit: number | null
     /** Why auto-recharge was last switched off (a decline, typically). */
     last_error: string | null
     /** A recharge is in flight. */
