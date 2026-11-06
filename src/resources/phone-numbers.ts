@@ -1,6 +1,6 @@
 import type { RequestOptions } from "../core/http.js"
 import type { PhoneNumberAssignParams, PhoneNumberCreateParams, PhoneNumberUpdateParams } from "../types/params.js"
-import type { PhoneNumber } from "../types/phone-number.js"
+import type { InboundWebhookTestResult, PhoneNumber } from "../types/phone-number.js"
 import { APIResource, path } from "./resource.js"
 
 export class PhoneNumbers extends APIResource {
@@ -44,6 +44,23 @@ export class PhoneNumbers extends APIResource {
   /** Set the number's **inbound** agent, or pass `agent_id: null` to clear it. For outbound, use `update`. */
   assign(phoneNumberId: string, body: PhoneNumberAssignParams, options?: RequestOptions): Promise<PhoneNumber> {
     return this._client.patch(path`/v1/phone-numbers/${phoneNumberId}/assign`, body, options)
+  }
+
+  /**
+   * Send one signed test request to the number's inbound routing webhook and report what a real call would have done
+   * with your answer: the status, how long you took against the time budget, and any field that would be ignored.
+   * Throws a `ConflictError` (`inbound_webhook_not_set`) when the number has no `inbound_webhook_url`.
+   */
+  testInboundWebhook(phoneNumberId: string, options?: RequestOptions): Promise<InboundWebhookTestResult> {
+    return this._client.post(path`/v1/phone-numbers/${phoneNumberId}/inbound-webhook/test`, undefined, options)
+  }
+
+  /**
+   * Replace the inbound webhook's signing secret. The new secret is returned **once**, as `inbound_webhook_secret`
+   * on the number; the old one stops working at once.
+   */
+  rotateInboundWebhookSecret(phoneNumberId: string, options?: RequestOptions): Promise<PhoneNumber> {
+    return this._client.post(path`/v1/phone-numbers/${phoneNumberId}/inbound-webhook/rotate-secret`, undefined, options)
   }
 
   /** Release the number from Dialgem. It stops routing calls and disappears from `list()`; your carrier account is untouched. */

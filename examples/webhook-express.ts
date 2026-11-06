@@ -25,16 +25,24 @@ app.post("/webhooks/dialgem", express.raw({ type: "application/json" }), async (
   if (deliveryId && seenDeliveries.has(deliveryId)) return res.sendStatus(204)
   if (deliveryId) seenDeliveries.add(deliveryId)
 
-  const { call } = event
   switch (event.event) {
-    case "call_started":
+    case "call_started": {
+      const { call } = event
       console.log(`call ${call.id} started for customer ${String(call.metadata["crm_id"])}`)
       break
-    case "call_ended":
+    }
+    case "call_ended": {
+      const { call } = event
       console.log(`call ${call.id} ended (${call.disconnection_reason}) after ${call.duration_ms} ms`)
       break
-    case "call_analyzed":
+    }
+    case "call_analyzed": {
+      const { call } = event
       console.log(`call ${call.id}: ${call.analysis?.call_summary}`, call.analysis?.variables)
+      break
+    }
+    case "chat_ended":
+      console.log(`chat ${event.chat_id} ended: ${event.chat.end_reason}`)
       break
   }
 

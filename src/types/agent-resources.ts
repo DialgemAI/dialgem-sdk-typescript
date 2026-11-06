@@ -59,6 +59,20 @@ export interface MCPServer {
   created_at: string | null
 }
 
+/** One tool an MCP server offers. */
+export interface MCPTool {
+  name: string
+  description: string
+  /** JSON Schema for the tool's arguments. */
+  input_schema: Record<string, unknown>
+}
+
+/** What `mcpServers.listTools` returns. When the server is unreachable `tools` is empty and `error` says why. */
+export interface MCPToolList {
+  tools: MCPTool[]
+  error: string | null
+}
+
 export interface MCPServerTestResult {
   ok: boolean
   /** Tool names the server advertised. */

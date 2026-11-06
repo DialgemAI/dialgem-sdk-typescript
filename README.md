@@ -1,11 +1,45 @@
-# @dialgem/sdk
+<div align="center">
 
-The official TypeScript SDK for the [Dialgem](https://dialgem.com) voice AI API. Use it from your backend to create voice agents, put them on phone numbers, place and register calls, pull transcripts, and verify webhooks.
+# Dialgem for TypeScript
 
-- Written in TypeScript. Request bodies are typed from the API's own schema, including the full conversation-flow node union.
-- Zero runtime dependencies. Ships ESM and CommonJS builds.
-- Node.js 20+. It also runs on Bun, Deno and serverless runtimes that provide `fetch` and Web Crypto.
-- Server-side only. Your API key grants full access to your organization.
+**The official TypeScript SDK for the [Dialgem](https://dialgem.com) voice AI API.**
+
+Build voice agents, put them on phone numbers, place calls, steer them live, and read transcripts, all from your backend.
+
+[![npm](https://img.shields.io/npm/v/@dialgem/sdk?include_prereleases&color=CB3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/@dialgem/sdk)
+[![Node](https://img.shields.io/node/v/@dialgem/sdk?logo=node.js&logoColor=white)](https://www.npmjs.com/package/@dialgem/sdk)
+[![CI](https://img.shields.io/github/actions/workflow/status/DialgemAI/dialgem-sdk-typescript/ci.yml?branch=main&label=CI&logo=github)](https://github.com/DialgemAI/dialgem-sdk-typescript/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-typed-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Stars](https://img.shields.io/github/stars/DialgemAI/dialgem-sdk-typescript?style=flat&logo=github)](https://github.com/DialgemAI/dialgem-sdk-typescript/stargazers)
+
+[Website](https://dialgem.com) · [Issues](https://github.com/DialgemAI/dialgem-sdk-typescript/issues) · [Changelog](CHANGELOG.md) · [Python SDK](https://github.com/DialgemAI/dialgem-sdk-python)
+
+</div>
+
+---
+
+```ts
+import { Dialgem } from "@dialgem/sdk"
+
+const dialgem = new Dialgem() // reads DIALGEM_API_KEY
+
+const agent = await dialgem.agents.create({ name: "Front desk", system_prompt: "You answer for Acme Dental." })
+const { call_id } = await dialgem.calls.createPhoneCall({ from_: "+14155550100", to: "+14155550123", agent_id: agent.id })
+```
+
+## Why this SDK
+
+- **Typed end to end.** Request bodies are typed from the API's own schema, including the full conversation-flow node union, and webhook events are a discriminated union you can `switch` on.
+- **Zero runtime dependencies.** ESM and CommonJS builds, so it works from any Node project.
+- **Runs anywhere with `fetch`.** Node.js 20+, Bun, Deno and serverless runtimes that provide `fetch` and Web Crypto.
+- **Safe by default.** `POST` is never retried (a retry could ring someone twice), other requests retry with backoff and `Retry-After`, and redirects are never followed so your key can't be sent elsewhere.
+- **Everything a backend needs.** Agents (with tools, knowledge, MCP servers and versions), phone numbers, calls and chats, saved flows and LLMs, voices, contacts, live call control, and webhook signature verification.
+- **Server-side only.** Your API key grants full access to your organization. To talk to an agent from a web page, use [`@dialgem/client`](https://github.com/DialgemAI/dialgem-client-sdk).
+
+## Contents
+
+[Install](#install) · [Quickstart](#quickstart) · [Recipes](#recipes) · [Live call control](#live-call-control) · [Errors](#errors) · [Retries](#retries) · [Coverage](#coverage) · [Development](#development) · [License](#license)
 
 ## Install
 
@@ -255,32 +289,23 @@ than quietly picking one.
 `voices.delete(voice.id)` removes it at the provider and here. It refuses with a
 409 while an agent still uses it, rather than leaving that agent without a voice.
 
-### 8. Watch spend and stay in credit
 
-Calls are paid for out of a prepaid balance: each finished call's cost is
-deducted, and once the balance is spent new calls are refused with a
-`402` (`PaymentRequiredError`). Top-ups and auto-recharge are done by a person
-in the dashboard — they need an admin session, and an API key is not one — so
-what your backend does is watch.
+## Live call control
+
+Steer a call while it is happening. `sessionId` is the session's id from `sessions.list()` or the call's own `call_id`, and the call can be on any service instance.
 
 ```ts
-const billing = await dialgem.billing.retrieve()
-if (billing.enabled && billing.balance < billing.rate_per_minute * 30) {
-  alertTheTeam(`Dialgem credit is down to ${(billing.balance / 10_000).toFixed(2)}`)
-}
+// Change this call's prompt or variables from the agent's next turn (not saved, only this call).
+await dialgem.sessions.update(call_id, { dynamic_variables: { plan: "pro" } })
 
-// What it went on, this month so far.
-const usage = await dialgem.usage.retrieve()
-for (const agent of usage.by_agent.slice(0, 5)) {
-  console.log(agent.agent_name, (agent.cost / 10_000).toFixed(2), agent.billed_seconds)
-}
+// Make the agent say a line in its own voice; interrupt: true cuts in now.
+await dialgem.sessions.say(call_id, { text: "One moment while I check that." })
 
-// Calls in progress right now, before placing another.
-const { count } = await dialgem.sessions.list()
+// Give a taken-over call back to the agent.
+await dialgem.sessions.release(call_id)
 ```
 
-Every amount is an integer in units of $0.0001, the same as `call.call_cost`:
-divide by 10,000 for dollars. `usage` days are UTC.
+`say` and `release` are **off unless your deployment enables live control** (`PermissionDeniedError` with `errCode` `live_control_disabled`), and are for owners, admins and API keys only. Listening in and taking a call over run over a WebSocket (`/v1/agent/sessions/{id}/live`), which this SDK does not wrap.
 
 ## Errors
 
@@ -330,16 +355,19 @@ The SDK never follows redirects. The API does not issue them, and following one 
 | `agents.knowledge` | `list`, `create`, `delete` |
 | `agents.mcpServers` | `list`, `create`, `update`, `delete`, `test` |
 | `agents.versions` | `publish`, `list`, `listPage`, `retrieve` |
-| `calls` | `list`, `retrieve`, `update`, `delete`, `stop`, `createPhoneCall`, `register` |
+| `calls` | `list`, `retrieve`, `update`, `delete`, `stop`, `rerunAnalysis`, `createPhoneCall`, `register` |
 | `phoneNumbers` | `create`, `list`, `retrieve`, `update`, `assign`, `delete` |
 | `voices` | `list`, `clone`, `delete` |
 | `flowTemplates`, `promptTemplates` | `list`, `retrieve` |
-| `usage` | `retrieve` |
-| `billing` | `retrieve`, `transactions` |
-| `sessions` | `list` |
+| `llms` | `create`, `list`, `retrieve`, `update`, `delete` |
+| `flows` | `create`, `list`, `retrieve`, `update`, `delete` |
+| `chats` | `create`, `list`, `retrieve`, `update`, `delete`, `sendMessage`, `end`, `rerunAnalysis` |
+| `sessions` | `list`, `update`, `say`, `release` |
+| `apiKey` | `retrieve` |
+| `contacts` | `retrieveByPhone` (and the rest: see the reference) |
 | `webhooks` | `verify`, `constructEvent`, `constructFunctionCall` |
 
-In-browser web calls are not part of this package.
+In-browser web calls are not part of this package: see [`@dialgem/client`](https://github.com/DialgemAI/dialgem-client-sdk).
 
 ## Development
 
@@ -378,3 +406,11 @@ To release, bump `version` in `package.json` and `src/version.ts`, add a CHANGEL
 ## License
 
 Apache-2.0
+
+---
+
+<div align="center">
+
+If this SDK saves you time, a ⭐ on [GitHub](https://github.com/DialgemAI/dialgem-sdk-typescript) helps other developers find it.
+
+</div>

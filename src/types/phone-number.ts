@@ -39,6 +39,36 @@ export interface PhoneNumber {
   /** Epoch milliseconds (0 if unknown). */
   last_modification_timestamp: number
   sip_outbound_trunk_config: SipOutboundTrunkConfig | null
+  /** The inbound routing webhook, asked before an inbound call is answered. `null` when none is set. */
+  inbound_webhook_url: string | null
+  /** The last four characters of the signing secret; `null` with no webhook. */
+  inbound_webhook_secret_hint: string | null
+  /** The full signing secret. Present **only** in the response that created or rotated it, never again. */
+  inbound_webhook_secret?: string
+}
+
+/** What `phoneNumbers.testInboundWebhook` reports. */
+export interface InboundWebhookTestResult {
+  /** Your endpoint answered with a 2xx. */
+  ok: boolean
+  status_code: number | null
+  latency_ms: number
+  /** The time your endpoint has for a real call (`INBOUND_ROUTING_TIMEOUT_S`). */
+  budget_ms: number
+  error: string | null
+  /** What a real call would have done with the answer. */
+  decision: {
+    outcome: "unchanged" | "applied" | "rejected" | "fallback"
+    note?: string
+    reject_reason?: string
+    agent_id?: string
+    agent_version?: number | null
+    /** Names of the dynamic variables that would be applied. */
+    variables?: string[]
+    metadata_keys?: string[]
+    /** Fields that would be ignored, as `field: reason`. */
+    ignored?: Record<string, string>
+  }
 }
 
 export interface PhoneNumberAgentWeight {

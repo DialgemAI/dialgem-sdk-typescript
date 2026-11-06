@@ -50,7 +50,7 @@ export interface RequestOptions {
   /**
    * Retries on 408/429/5xx and connection failures.
    *
-   * GET, PATCH and DELETE use the client's `maxRetries` unless overridden here.
+   * GET, PUT, PATCH and DELETE use the client's `maxRetries` unless overridden here.
    * **POST is never retried unless you set this explicitly**: most POSTs create
    * things, and an outbound call retried after an ambiguous 502 dials the person twice.
    */
@@ -75,9 +75,9 @@ export interface HttpClientOptions {
   defaultHeaders: Record<string, string>
 }
 
-type Method = "GET" | "POST" | "PATCH" | "DELETE"
+type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
 
-const RETRYABLE_METHODS: ReadonlySet<Method> = new Set(["GET", "PATCH", "DELETE"])
+const RETRYABLE_METHODS: ReadonlySet<Method> = new Set(["GET", "PUT", "PATCH", "DELETE"])
 const MAX_RETRY_DELAY_MS = 60_000
 
 export class HttpClient {
@@ -114,6 +114,10 @@ export class HttpClient {
    */
   postForm<T>(path: string, form: FormData, options?: RequestOptions): Promise<T> {
     return this.request<T>("POST", path, { body: form, options })
+  }
+
+  put<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T> {
+    return this.request<T>("PUT", path, { body, options })
   }
 
   patch<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T> {

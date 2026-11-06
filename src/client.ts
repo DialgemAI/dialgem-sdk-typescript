@@ -3,8 +3,14 @@ import { HttpClient, assertMaxRetries, assertTimeout, type Fetch } from "./core/
 import { Agents } from "./resources/agents.js"
 import { Calls } from "./resources/calls.js"
 import { ExtractionModels, FlowTemplates, PromptTemplates, Voices } from "./resources/catalog.js"
-import { Billing, Sessions, Usage } from "./resources/account.js"
+import { ApiKey, Sessions } from "./resources/account.js"
+import { Simulations } from "./resources/simulations.js"
+import { WebCalls } from "./resources/web-calls.js"
+import { ContactLists, Contacts } from "./resources/contacts.js"
 import { PhoneNumbers } from "./resources/phone-numbers.js"
+import { Chats } from "./resources/chats.js"
+import { Flows } from "./resources/flows.js"
+import { LLMs } from "./resources/llms.js"
 import { Webhooks, webhooks } from "./webhooks.js"
 
 /** The Dialgem API. Fixed: the SDK talks to Dialgem and nothing else. */
@@ -55,11 +61,27 @@ export class Dialgem {
   readonly extractionModels: ExtractionModels
   readonly flowTemplates: FlowTemplates
   readonly promptTemplates: PromptTemplates
-  readonly usage: Usage
-  readonly billing: Billing
   /** Calls in progress right now. */
   readonly sessions: Sessions
+  /** Text conversations with an agent. */
+  readonly chats: Chats
+  readonly flows: Flows
+  readonly llms: LLMs
+  /** What this API key is and may do. */
+  readonly apiKey: ApiKey
+  /**
+   * Verify what Dialgem sends you: `dialgem.webhooks.constructEvent(rawBody, signatureHeader, secret)`.
+   */
   readonly webhooks: Webhooks = webhooks
+  /** The organization's webhook destinations: create, update, rotate the signing secret, test. */
+  /** The people you call, with CSV import under `contacts.imports`. */
+  readonly contacts: Contacts
+  /** Named groups of contacts. */
+  readonly contactLists: ContactLists
+  /** Browser calls: tokens for `@dialgem/client`, and the origins allowed to start them. */
+  readonly webCalls: WebCalls
+  /** Saved test conversations for an agent, run in text, with an optional publish gate. */
+  readonly simulations: Simulations
 
   /** Always `https://api.dialgem.com`. */
   readonly baseURL: string = BASE_URL
@@ -111,9 +133,15 @@ export class Dialgem {
     this.extractionModels = new ExtractionModels(http)
     this.flowTemplates = new FlowTemplates(http)
     this.promptTemplates = new PromptTemplates(http)
-    this.usage = new Usage(http)
-    this.billing = new Billing(http)
     this.sessions = new Sessions(http)
+    this.chats = new Chats(http)
+    this.flows = new Flows(http)
+    this.llms = new LLMs(http)
+    this.apiKey = new ApiKey(http)
+    this.contacts = new Contacts(http)
+    this.contactLists = new ContactLists(http)
+    this.webCalls = new WebCalls(http)
+    this.simulations = new Simulations(http)
   }
 }
 

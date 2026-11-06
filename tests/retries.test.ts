@@ -24,6 +24,7 @@ describe("retries", () => {
   })
 
   it.each([
+    ["PUT", (c: ReturnType<typeof client>) => c.webCalls.updateSettings({ allowed_origins: ["https://a.io"] })],
     ["PATCH", (c: ReturnType<typeof client>) => c.agents.update("a", { name: "n" })],
     ["DELETE", (c: ReturnType<typeof client>) => c.agents.delete("a")],
   ])("retries %s", async (_method, invoke) => {

@@ -22,11 +22,25 @@ const doc = JSON.parse(readFileSync(snapshotPath, "utf8")) as OpenAPIDoc
 
 /** Find the OpenAPI path template (`/v1/agents/{agent_id}`) that matches a concrete path. */
 function matchTemplate(concretePath: string): string | undefined {
-  return Object.keys(doc.paths).find((template) => {
-    const pattern = new RegExp(`^${template.replace(/\{[^}]+\}/g, "[^/]+")}$`)
-    return pattern.test(concretePath)
-  })
+  // `/v1/contacts/imports` matches both itself and `/v1/contacts/{contact_id}`; a router
+  // sends it to the fixed path, so prefer the template with the fewest placeholders.
+  const params = (template: string) => (template.match(/\{[^}]+\}/g) ?? []).length
+  return Object.keys(doc.paths)
+    .filter((template) => new RegExp(`^${template.replace(/\{[^}]+\}/g, "[^/]+")}$`).test(concretePath))
+    .sort((a, b) => params(a) - params(b))[0]
 }
+
+const FORBIDDEN = ["/v1/campaigns", "/v1/webhooks", "/v1/billing", "/v1/usage", "/v1/analytics", "/v1/auth", "/v1/admin", "/v1/orgs", "/v1/gem", "/v1/internal", "/v1/test", "/scim", "/v1/invitations", "/v1/audit-log", "/v1/agent/call"]
+
+describe("API surface policy", () => {
+  it.each(SDK_CALLS)("$name stays inside the customer surface", async (call) => {
+    const { fetch, calls } = mockFetch(() => ({ body: {} }))
+    await call.invoke(client(fetch))
+    const path = new URL(calls[0]!.url).pathname
+    expect(FORBIDDEN.some((p) => path.startsWith(p))).toBe(false)
+    expect(path).not.toMatch(/\/(erase-data|do-not-call)/)
+  })
+})
 
 describe("OpenAPI contract", () => {
   it.each(SDK_CALLS)("$name: $method route exists", async (call) => {

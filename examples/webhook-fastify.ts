@@ -19,7 +19,7 @@ await app.register(async (hooks) => {
         req.headers[WEBHOOK_SIGNATURE_HEADER],
         secret,
       )
-      req.log.info({ event: event.event, call_id: event.call_id }, "dialgem webhook")
+      req.log.info({ event: event.event, id: "call_id" in event ? event.call_id : event.chat_id }, "dialgem webhook")
       return reply.code(204).send()
     } catch (err) {
       if (err instanceof WebhookVerificationError) return reply.code(400).send(err.message)

@@ -57,6 +57,21 @@ export class Calls extends APIResource {
   }
 
   /**
+   * Run a finished call's post-call analysis again, with the agent's *current* analysis
+   * settings, and return the updated call. Use it after changing the fields or the model
+   * and wanting an older call read the new way.
+   *
+   * It replaces `analysis`; it does not bill the call again and does not send `call_analyzed`
+   * again, so read the result from this response or from `retrieve`. The model call can take
+   * a while. `ConflictError` with `errCode` `call_in_progress` until the call has ended,
+   * `no_transcript` when there is nothing to analyze, `agent_deleted` if the agent is gone.
+   * Not retried by default.
+   */
+  rerunAnalysis(callId: string, options?: RequestOptions): Promise<Call> {
+    return this._client.post(path`/v1/calls/${callId}/rerun-analysis`, undefined, options)
+  }
+
+  /**
    * End an ongoing call now, as if the agent had hung up. The call becomes
    * `completed` with `disconnection_reason: "manual_stopped"` a moment later, and
    * the usual `call_ended` webhook follows.
