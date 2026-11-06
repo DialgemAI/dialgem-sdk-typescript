@@ -1,6 +1,6 @@
 import type { HttpClient, RequestOptions } from "../core/http.js"
 import type { Agent, AgentDeleteResponse } from "../types/agent.js"
-import type { AgentFunction, KnowledgeDocument, MCPServer, MCPServerTestResult } from "../types/agent-resources.js"
+import type { AgentFunction, KnowledgeDocument, MCPServer, MCPServerTestResult, MCPToolList } from "../types/agent-resources.js"
 import type {
   AgentVersion,
   AgentVersionListParams,
@@ -198,6 +198,14 @@ export class AgentMCPServers extends APIResource {
   }
 
   /** Connect to the server now, list its tools, and store the result as `last_status`. */
+  /**
+   * What the server offers right now, with each tool's description and argument schema. Connects live like
+   * `test`, but stores nothing. An unreachable server is not an error: `tools` is empty and `error` says why.
+   */
+  listTools(agentId: string, serverId: string, options?: RequestOptions): Promise<MCPToolList> {
+    return this._client.get(path`/v1/agents/${agentId}/mcp-servers/${serverId}/tools`, undefined, options)
+  }
+
   test(agentId: string, serverId: string, options?: RequestOptions): Promise<MCPServerTestResult> {
     return this._client.post(path`/v1/agents/${agentId}/mcp-servers/${serverId}/test`, undefined, options)
   }

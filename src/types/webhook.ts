@@ -1,4 +1,5 @@
 import type { Call } from "./call.js"
+import type { Chat } from "./chat.js"
 import type { WebhookEventType } from "./params.js"
 
 /**
@@ -18,6 +19,9 @@ export type WebhookEvent =
   | TransferBridgedEvent
   | TransferCancelledEvent
   | TransferEndedEvent
+  | ChatStartedEvent
+  | ChatEndedEvent
+  | ChatAnalyzedEvent
 
 interface CallEventBase {
   call_id: string
@@ -38,6 +42,28 @@ export interface CallEndedEvent extends CallEventBase {
 /** Sent after `call_ended`, once analysis has run, and only for calls that produced a transcript. */
 export interface CallAnalyzedEvent extends CallEventBase {
   event: "call_analyzed"
+}
+
+interface ChatEventBase {
+  chat_id: string
+  agent_id: string
+  /** The full chat record, with its messages, at the moment the event was sent. */
+  chat: Chat
+}
+
+/** A chat was started. Chat events carry `chat_id`, not `call_id`. */
+export interface ChatStartedEvent extends ChatEventBase {
+  event: "chat_started"
+}
+
+/** The chat ended (by `chats.end` or by the agent). Analysis follows in `chat_analyzed`. */
+export interface ChatEndedEvent extends ChatEventBase {
+  event: "chat_ended"
+}
+
+/** Sent once a chat's analysis has run. */
+export interface ChatAnalyzedEvent extends ChatEventBase {
+  event: "chat_analyzed"
 }
 
 /** A transcript turn as carried by `transcript_updated`. */

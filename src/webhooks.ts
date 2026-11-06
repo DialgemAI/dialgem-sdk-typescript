@@ -5,6 +5,12 @@ import type { FunctionCallRequest, WebhookEvent } from "./types/webhook.js"
 export const WEBHOOK_SIGNATURE_HEADER = "x-dialgem-signature"
 /** Header naming the event; the same value as the body's `event`. */
 export const WEBHOOK_EVENT_HEADER = "x-dialgem-event"
+/**
+ * During a signing-secret rotation overlap, the same body signed with the PREVIOUS
+ * secret. Verify `x-dialgem-signature` with the new secret; a receiver that has not
+ * switched yet can verify this one with the old secret instead.
+ */
+export const WEBHOOK_PREVIOUS_SIGNATURE_HEADER = "x-dialgem-signature-previous"
 /** Header with an id that stays the same across retries of one delivery. */
 export const WEBHOOK_DELIVERY_HEADER = "x-dialgem-delivery"
 

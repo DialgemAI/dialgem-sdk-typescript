@@ -96,6 +96,7 @@ describe("webhooks.constructEvent", () => {
   it("returns the typed event with the full call record", async () => {
     const event: WebhookEvent = await Dialgem.webhooks.constructEvent(ended.body, ended.signature, secret, at(ended))
     expect(event.event).toBe("call_ended")
+    if (!("call" in event)) throw new Error("expected a call event")
     expect(event.call.duration_ms).toBe(42500)
     expect(event.call.metadata).toEqual({ crm_id: "42" })
     expect(event.call_id).toBe(event.call.id)
@@ -104,6 +105,7 @@ describe("webhooks.constructEvent", () => {
   it("decodes non-ASCII from bytes and exposes the summary", async () => {
     const event = await webhooks.constructEvent(Buffer.from(analyzed.body), analyzed.signature, secret, at(analyzed))
     expect(event.event).toBe("call_analyzed")
+    if (!("call" in event)) throw new Error("expected a call event")
     expect(event.call.analysis?.call_summary).toBe("Greeted Zoë.")
     expect(event.call.dynamic_variables["name"]).toBe("Zoë")
   })
@@ -141,5 +143,22 @@ describe("webhooks.constructFunctionCall", () => {
     await expect(webhooks.constructFunctionCall(ended.body, ended.signature, secret, at(ended))).rejects.toThrow(
       /args_at_root/,
     )
+  })
+})
+
+describe("chat events", () => {
+  it("are part of WebhookEvent and narrow on `event` to a chat, not a call", () => {
+    const describeEvent = (e: WebhookEvent): string => {
+      switch (e.event) {
+        case "chat_started":
+        case "chat_ended":
+        case "chat_analyzed":
+          return e.chat.chat_id
+        default:
+          return "other"
+      }
+    }
+    const e = { event: "chat_ended", chat_id: "c1", agent_id: "a", chat: { chat_id: "c1" } } as unknown as WebhookEvent
+    expect(describeEvent(e)).toBe("c1")
   })
 })
