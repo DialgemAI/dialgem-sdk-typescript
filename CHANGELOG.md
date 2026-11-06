@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0-beta.1 (unreleased)
+## 0.1.0-beta.2
 
 ### Not in this SDK, on purpose
 Campaigns, webhook endpoint management, usage, billing, analytics, and contact erasure / do-not-call are dashboard-only. See the surface policy in the Python SDK's `docs/api-surface.md`.
