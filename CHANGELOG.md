@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.0-beta.3
+
+### Added
+- `phoneNumbers.search({ country?, type?, area_code?, contains?, limit? })` lists numbers that can be bought, with the monthly price, and `phoneNumbers.buy({ phone_number, type?, nickname? })` buys one. **Buying spends the organization's credit**: the first month is debited when you buy and the rental renews monthly until the number is released; nothing is charged if the purchase fails. Both need the deployment to have number purchasing switched on (`search` throws `NotFoundError`, `number_purchase_disabled`, otherwise). Types: `PhoneNumberSearchParams`, `PhoneNumberBuyParams`, `AvailablePhoneNumbers`, `PurchasedPhoneNumber`.
+- A number looked up with `phoneNumbers.retrieve` now carries `own_twilio` (whether it is on a Twilio account you connected yourself). Connecting your own Twilio account and importing its numbers is a dashboard feature; it is not in the SDK, because it handles your Twilio credentials.
+
 ## 0.1.0-beta.2
 
 ### Not in this SDK, on purpose
