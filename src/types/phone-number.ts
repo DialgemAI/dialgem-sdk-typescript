@@ -47,6 +47,30 @@ export interface PhoneNumber {
   inbound_webhook_secret?: string
 }
 
+/** A number that can be bought, from `phoneNumbers.search`. */
+export interface AvailablePhoneNumber {
+  /** E.164. Pass it to `phoneNumbers.buy`. */
+  phone_number: string
+  friendly_name: string
+  type: string
+  locality: string | null
+  region: string | null
+  country: string
+  voice: boolean
+  sms: boolean
+  mms: boolean
+}
+
+export interface AvailablePhoneNumbers {
+  numbers: AvailablePhoneNumber[]
+  /** The monthly rental, in 0.0001-dollar units (`monthly_price_usd * 10000`). */
+  monthly_price_units: number
+  monthly_price_usd: number
+}
+
+/** What `phoneNumbers.buy` returns: the new number, plus its monthly price. */
+export type PurchasedPhoneNumber = PhoneNumber & { monthly_price_units: number; monthly_price_usd: number }
+
 /** What `phoneNumbers.testInboundWebhook` reports. */
 export interface InboundWebhookTestResult {
   /** Your endpoint answered with a 2xx. */

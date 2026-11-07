@@ -87,6 +87,8 @@ export const SDK_CALLS: SdkCall[] = [
   { name: "calls.register", invoke: (c) => c.calls.register({ agent_id: "ag_1", call_sid: "CA1" }), method: "POST", path: "/v1/calls/register", body: { agent_id: "ag_1", call_sid: "CA1" } },
 
   { name: "phoneNumbers.create", invoke: (c) => c.phoneNumbers.create({ phone_number: "+14155550100" }), method: "POST", path: "/v1/phone-numbers", body: { phone_number: "+14155550100" } },
+  { name: "phoneNumbers.search", invoke: (c) => c.phoneNumbers.search({ area_code: "415" }), method: "GET", path: "/v1/phone-numbers/available?area_code=415" },
+  { name: "phoneNumbers.buy", invoke: (c) => c.phoneNumbers.buy({ phone_number: "+14155550100" }), method: "POST", path: "/v1/phone-numbers/buy", body: { phone_number: "+14155550100" } },
   { name: "phoneNumbers.list", invoke: (c) => c.phoneNumbers.list(), method: "GET", path: "/v1/phone-numbers" },
   { name: "phoneNumbers.retrieve", invoke: (c) => c.phoneNumbers.retrieve("+14155550100"), method: "GET", path: "/v1/phone-numbers/by-number/%2B14155550100" },
   { name: "phoneNumbers.update", invoke: (c) => c.phoneNumbers.update("pn_1", { nickname: "Main" }), method: "PATCH", path: "/v1/phone-numbers/pn_1", body: { nickname: "Main" } },

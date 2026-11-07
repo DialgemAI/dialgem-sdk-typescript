@@ -1,12 +1,40 @@
 import type { RequestOptions } from "../core/http.js"
-import type { PhoneNumberAssignParams, PhoneNumberCreateParams, PhoneNumberUpdateParams } from "../types/params.js"
-import type { InboundWebhookTestResult, PhoneNumber } from "../types/phone-number.js"
+import type {
+  PhoneNumberAssignParams,
+  PhoneNumberBuyParams,
+  PhoneNumberCreateParams,
+  PhoneNumberSearchParams,
+  PhoneNumberUpdateParams,
+} from "../types/params.js"
+import type {
+  AvailablePhoneNumbers,
+  InboundWebhookTestResult,
+  PhoneNumber,
+  PurchasedPhoneNumber,
+} from "../types/phone-number.js"
 import { APIResource, path } from "./resource.js"
 
 export class PhoneNumbers extends APIResource {
   /** Register a number you own (`phone_number` in E.164) with Dialgem. */
   create(body: PhoneNumberCreateParams, options?: RequestOptions): Promise<PhoneNumber> {
     return this._client.post("/v1/phone-numbers", body, options)
+  }
+
+  /**
+   * Numbers that can be bought, with the monthly price. Throws `NotFoundError` (`number_purchase_disabled`) when the
+   * deployment has not switched buying on.
+   */
+  search(params?: PhoneNumberSearchParams, options?: RequestOptions): Promise<AvailablePhoneNumbers> {
+    return this._client.get("/v1/phone-numbers/available", { ...params }, options)
+  }
+
+  /**
+   * Buy one of the numbers `search` returned. **Spends the organization's credit**: the first month is debited now and
+   * the rental renews monthly until the number is released. Throws on insufficient credit, or if the carrier no longer
+   * has the number; nothing is charged in either case.
+   */
+  buy(body: PhoneNumberBuyParams, options?: RequestOptions): Promise<PurchasedPhoneNumber> {
+    return this._client.post("/v1/phone-numbers/buy", body, options)
   }
 
   /** Every active (not released) number in the organization, newest first. */

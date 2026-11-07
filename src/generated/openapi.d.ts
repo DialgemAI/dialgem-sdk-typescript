@@ -972,6 +972,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/phone-numbers/available": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Available Numbers */
+        get: operations["available_numbers_v1_phone_numbers_available_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/phone-numbers/buy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Buy Number */
+        post: operations["buy_number_v1_phone_numbers_buy_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/phone-numbers/by-number/{number}": {
         parameters: {
             query?: never;
@@ -1780,6 +1814,18 @@ export interface components {
             call_summary?: components["schemas"]["BuiltinAnalysisField"] | null;
             user_sentiment?: components["schemas"]["BuiltinAnalysisField"] | null;
         };
+        /** BuyNumberRequest */
+        BuyNumberRequest: {
+            /** Nickname */
+            nickname?: string | null;
+            /** Phone Number */
+            phone_number: string;
+            /**
+             * Type
+             * @default local
+             */
+            type?: string;
+        };
         /** CallPatch */
         CallPatch: {
             /** Amd Result */
@@ -1790,6 +1836,8 @@ export interface components {
             call_sid?: string | null;
             /** Disconnection Reason */
             disconnection_reason?: string | null;
+            /** Disconnection Reason Default */
+            disconnection_reason_default?: string | null;
             /** Duration S */
             duration_s?: number | null;
             /** Ended At */
@@ -6180,6 +6228,77 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    available_numbers_v1_phone_numbers_available_get: {
+        parameters: {
+            query?: {
+                api_key?: string | null;
+                area_code?: string | null;
+                contains?: string | null;
+                country?: string;
+                limit?: number;
+                type?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    buy_number_v1_phone_numbers_buy_post: {
+        parameters: {
+            query?: {
+                api_key?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BuyNumberRequest"];
+            };
+        };
+        responses: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };

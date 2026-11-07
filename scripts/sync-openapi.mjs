@@ -51,6 +51,8 @@ const PUBLIC_OPERATIONS = {
   "/v1/phone-numbers/{number_id}/inbound-webhook/test": ["post"],
   "/v1/phone-numbers/{number_id}/inbound-webhook/rotate-secret": ["post"],
   "/v1/phone-numbers/by-number/{number}": ["get"],
+  "/v1/phone-numbers/available": ["get"],
+  "/v1/phone-numbers/buy": ["post"],
   "/v1/voices": ["get"],
   "/v1/voices/clone": ["post"],
   "/v1/voices/{voice_id}": ["delete"],

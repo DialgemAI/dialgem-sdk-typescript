@@ -2518,6 +2518,177 @@
         }
       }
     },
+    "/v1/phone-numbers/available": {
+      "get": {
+        "summary": "Available Numbers",
+        "operationId": "available_numbers_v1_phone_numbers_available_get",
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 2,
+              "default": "US",
+              "title": "Country"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "local",
+              "title": "Type"
+            }
+          },
+          {
+            "name": "area_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^\\d{3}$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Area Code"
+            }
+          },
+          {
+            "name": "contains",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 10,
+                  "pattern": "^[0-9*]+$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Contains"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Available Numbers V1 Phone Numbers Available Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/phone-numbers/buy": {
+      "post": {
+        "summary": "Buy Number",
+        "operationId": "buy_number_v1_phone_numbers_buy_post",
+        "parameters": [
+          {
+            "name": "api_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Api Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuyNumberRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Buy Number V1 Phone Numbers Buy Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/voices": {
       "get": {
         "summary": "List Voices",
@@ -8423,6 +8594,37 @@
         "type": "object",
         "title": "BuiltinAnalysisFields"
       },
+      "BuyNumberRequest": {
+        "properties": {
+          "phone_number": {
+            "type": "string",
+            "pattern": "^\\+[1-9]\\d{6,14}$",
+            "title": "Phone Number"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "default": "local"
+          },
+          "nickname": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nickname"
+          }
+        },
+        "type": "object",
+        "required": [
+          "phone_number"
+        ],
+        "title": "BuyNumberRequest"
+      },
       "CallPatch": {
         "properties": {
           "status": {
@@ -8538,6 +8740,17 @@
               }
             ],
             "title": "Disconnection Reason"
+          },
+          "disconnection_reason_default": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disconnection Reason Default"
           },
           "call_sid": {
             "anyOf": [

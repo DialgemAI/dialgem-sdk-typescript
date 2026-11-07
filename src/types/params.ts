@@ -26,6 +26,21 @@ export type MCPServerUpdateParams = RequestBody<Schemas["MCPServerUpdate"]>
 export type PhoneNumberCreateParams = RequestBody<Schemas["PhoneNumberCreate"]>
 export type PhoneNumberUpdateParams = RequestBody<Schemas["PhoneNumberUpdate"]>
 export type PhoneNumberAssignParams = RequestBody<Schemas["PhoneNumberAssign"]>
+export type PhoneNumberBuyParams = RequestBody<Schemas["BuyNumberRequest"]>
+
+/** Filters for `phoneNumbers.search`. */
+export interface PhoneNumberSearchParams {
+  /** Two-letter country code. Default `"US"`. */
+  country?: string
+  /** `"local"` (default) or `"toll_free"`. */
+  type?: string
+  /** Three digits. Local numbers only. */
+  area_code?: string
+  /** Digits (and `*`) the number must contain. */
+  contains?: string
+  /** 1 to 50. Default 20. */
+  limit?: number
+}
 
 /**
  * `from_`, with the trailing underscore, is the wire name (`from` is a Python
