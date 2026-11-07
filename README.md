@@ -6,7 +6,7 @@
 
 Build voice agents, put them on phone numbers, place calls, steer them live, and read transcripts, all from your backend.
 
-[![npm](https://img.shields.io/npm/v/@dialgem/sdk?include_prereleases&color=CB3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/@dialgem/sdk)
+[![npm](https://img.shields.io/npm/v/@dialgem/sdk?color=CB3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/@dialgem/sdk)
 [![Node](https://img.shields.io/node/v/@dialgem/sdk?logo=node.js&logoColor=white)](https://www.npmjs.com/package/@dialgem/sdk)
 [![CI](https://img.shields.io/github/actions/workflow/status/DialgemAI/dialgem-sdk-typescript/ci.yml?branch=main&label=CI&logo=github)](https://github.com/DialgemAI/dialgem-sdk-typescript/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)

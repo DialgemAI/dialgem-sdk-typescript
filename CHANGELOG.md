@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0
+
+The first stable release. The API is the one in `0.1.0-beta.3`, unchanged: nothing was added, removed or renamed. From here on, breaking changes only come in a new major version, and `npm install @dialgem/sdk` installs this release.
+
 ## 0.1.0-beta.3
 
 ### Added
