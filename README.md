@@ -405,7 +405,7 @@ To release, bump `version` in `package.json` and `src/version.ts`, add a CHANGEL
 
 ## License
 
-Apache-2.0
+Apache-2.0. Copyright 2026 Achroweb Solutions. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 ---
 
